@@ -1,0 +1,1 @@
+"""the interface to interact with wakeword model"""
