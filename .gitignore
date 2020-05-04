@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 
 ./data/
+*.venv
+.vscode
+.DS_Store
