@@ -1,5 +1,5 @@
-# Hackers-Guide-To-Building-an-AI-Voice-Assistant
-Build your own AI Voice Assistant
+# A Hackers AI Voice Assistant
+Build your own voice ai
 
 
 ## Running on native machine
