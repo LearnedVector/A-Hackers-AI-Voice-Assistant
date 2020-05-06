@@ -99,7 +99,7 @@ def main(args):
                                         collate_fn=collate_fn,
                                         **kwargs)
 
-    model = LSTMWakeWord(num_classes=1, feature_size=40, hidden_size=128,
+    model = LSTMWakeWord(num_classes=1, feature_size=40, hidden_size=args.hidden_size,
                         num_layers=1, dropout=0.1, bidirectional=False, device=device)
     model = model.to(device)
     optimizer = optim.AdamW(model.parameters(), lr=args.lr)
@@ -142,18 +142,13 @@ if __name__ == "__main__":
     parser.add_argument('--batch_size', type=int, default=32, help='size of batch')
     parser.add_argument('--eval_batch_size', type=int, default=32, help='size of batch')
     parser.add_argument('--lr', type=float, default=1e-4, help='learning rate')
-    parser.add_argument('--model_name', type=str, default="wakeword", required=False,
-                        help='name of model to save')
-    parser.add_argument('--save_checkpoint_path', type=str, default=None,
-                        help='Path to save the best checkpoint')
-    parser.add_argument('--train_data_json', type=str, default=None, required=True,
-                        help='path to train data json file')
-    parser.add_argument('--test_data_json', type=str, default=None, required=True,
-                        help='path to test data json file')
-    parser.add_argument('--no_cuda', action='store_true', default=False,
-                        help='disables CUDA training')
-    parser.add_argument('--num_workers', type=int, default=1,
-                        help='number of data loading workers')
+    parser.add_argument('--model_name', type=str, default="wakeword", required=False, help='name of model to save')
+    parser.add_argument('--save_checkpoint_path', type=str, default=None, help='Path to save the best checkpoint')
+    parser.add_argument('--train_data_json', type=str, default=None, required=True, help='path to train data json file')
+    parser.add_argument('--test_data_json', type=str, default=None, required=True, help='path to test data json file')
+    parser.add_argument('--no_cuda', action='store_true', default=False, help='disables CUDA training')
+    parser.add_argument('--num_workers', type=int, default=1, help='number of data loading workers')
+    parser.add_argument('--hidden_size', type=int, default=128, help='lstm hidden size')
 
     args = parser.parse_args()
 
