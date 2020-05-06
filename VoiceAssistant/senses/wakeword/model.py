@@ -1,23 +1,29 @@
 """wakeword model"""
+import torch
 import torch.nn as nn
 
 
 class LSTMWakeWord(nn.Module):
 
-    def __init__(self, num_classes, feature_size, hidden_size, num_layers, dropout, bidirectional):
+    def __init__(self, num_classes, feature_size, hidden_size,
+                num_layers, dropout, bidirectional, device):
+        super(LSTMWakeWord, self).__init__()
         self.num_layers = num_layers
         self.hidden_size = hidden_size
         self.directions = 2 if bidirectional else 1
-
-        self.lstm = nn.LSTM(feature_size, hidden_size, num_layers, dropout, bidirectional)
+        self.device = device
+        self.lstm = nn.LSTM(input_size=feature_size, hidden_size=hidden_size,
+                            num_layers=num_layers, dropout=dropout,
+                            bidirectional=bidirectional)
         self.classifier = nn.Linear(hidden_size*self.directions, num_classes)
 
     def _init_hidden(self, batch_size):
         n, d, hs = self.num_layers, self.directions, self.hidden_size
-        return (torch.randn(n*d, batch_size, hs), torch.randn(n*d, batch_size, hs))
+        return (torch.randn(n*d, batch_size, hs).to(self.device),
+                torch.randn(n*d, batch_size, hs).to(self.device))
 
     def forward(self, x):
-        batch_size = x.sizes[1]
+        batch_size = x.size()[1]
         hidden = self._init_hidden(batch_size)
         out, (hn, cn) = self.lstm(x, hidden)
         out = self.classifier(hn)
