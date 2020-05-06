@@ -42,4 +42,4 @@ def collate_fn(data):
     
     # pad mfccs to ensure all tensors are same size in the time dim
     mfccs = nn.utils.rnn.pad_sequence(mfccs, batch_first=True)
-    return mfcc, mfccs
+    return mfccs, labels
