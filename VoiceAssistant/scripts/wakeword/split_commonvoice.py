@@ -25,23 +25,13 @@ def main(args):
     df.path.parallel_apply(lambda x: chunk_and_save(x))
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description='''
-    Script to collect data for wake word training..
-
-    To record environment sound run set seconds to None. This will
-    record indefinitely until ctrl + c.
-
-    To record for a set amount of time set seconds to whatever you want.
-
-    To record interactively (usually for recording your own wake words N times)
-    use --interactive mode.
-    ''')
-    parser.add_argument('--sample_rate', type=int, default=8000,
-                        help='the sample_rate to record at')
+    parser = argparse.ArgumentParser(description="script to split common voice data into chunks")
     parser.add_argument('--seconds', type=int, default=None,
                         help='if set to None, then will record forever until keyboard interrupt')
     parser.add_argument('--data_path', type=str, default=None, required=True,
                         help='full path to data. i.e. /to/path/clips/')
+    parser.add_argument('--file_name', type=str, default=None, required=True,
+                        help='common voice file')
     parser.add_argument('--save_path', type=str, default=None, required=True,
                         help='full path to to save data. i.e. /to/path/saved_clips/')
 

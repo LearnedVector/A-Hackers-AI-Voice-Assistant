@@ -119,10 +119,10 @@ if __name__ == "__main__":
                         help='the sample_rate to record at')
     parser.add_argument('--seconds', type=int, default=None,
                         help='if set to None, then will record forever until keyboard interrupt')
-    parser.add_argument('--save_path', type=str, default=None, required=True,
+    parser.add_argument('--save_path', type=str, default=None, required=False,
                         help='full path to save file. i.e. /to/path/sound.wav')
     parser.add_argument('--interactive_save_path', type=str, default=None, required=False,
-                        help='path to save all the interactive 2 second samples. i.e. /to/path/sound.wav')
+                        help='directory to save all the interactive 2 second samples. i.e. /to/path/')
     parser.add_argument('--interactive', default=False, action='store_true', required=False,
                         help='sets to interactive mode')
 
@@ -133,4 +133,6 @@ if __name__ == "__main__":
             raise Exception('need to set --interactive_save_path')
         interactive(args)
     else:
+        if args.save_path is None:
+            raise Exception('need to set --save_path')
         main(args)

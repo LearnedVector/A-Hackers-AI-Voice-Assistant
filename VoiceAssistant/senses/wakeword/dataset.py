@@ -23,4 +23,23 @@ class WakeWordData(torch.utils.data.Dataset):
         try:    
             file_path = self.data.key.iloc[idx]
             waveform, _ = torchaudio.load(file_path)
-            label = preprocess(self.data.text.iloc[idx])
+            mfcc = self.audio_transform(waveform)
+            label = self.data.label.iloc[idx]
+
+        except Exception as e:
+            print(e)
+        
+        return mfcc, label
+
+
+def collate_fn(data):
+    mfccs = []
+    labels = []
+    for d in data:
+        mfcc, label = d
+        mfccs.append(mfcc)
+        labels.append(label)
+    
+    # pad mfccs to ensure all tensors are same size in the time dim
+    mfccs = nn.utils.rnn.pad_sequence(mfccs, batch_first=True)
+    return mfcc, mfccs
