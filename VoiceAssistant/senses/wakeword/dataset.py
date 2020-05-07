@@ -5,12 +5,16 @@ import torchaudio
 import pandas as pd
 
 
+def get_featurizer(sample_rate):
+    return torchaudio.transforms.MFCC(sample_rate=sample_rate, log_mels=True)
+
+
 class WakeWordData(torch.utils.data.Dataset):
 
     def __init__(self, data_json, sample_rate=8000):
         self.sr = sample_rate
         self.data = pd.read_json(data_json, lines=True)
-        self.audio_transform = torchaudio.transforms.MFCC(sample_rate=sample_rate, log_mels=True)
+        self.audio_transform = get_featurizer(sample_rate)
 
     def __len__(self):
         return len(self.data)
