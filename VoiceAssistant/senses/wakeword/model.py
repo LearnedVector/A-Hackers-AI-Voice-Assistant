@@ -6,7 +6,7 @@ import torch.nn as nn
 class LSTMWakeWord(nn.Module):
 
     def __init__(self, num_classes, feature_size, hidden_size,
-                num_layers, dropout, bidirectional, device):
+                num_layers, dropout, bidirectional, device='cpu'):
         super(LSTMWakeWord, self).__init__()
         self.num_layers = num_layers
         self.hidden_size = hidden_size

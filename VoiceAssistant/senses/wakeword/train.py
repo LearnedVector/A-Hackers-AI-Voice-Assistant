@@ -100,10 +100,9 @@ def main(args):
 
     model_params = {
         "num_classes": 1, "feature_size": 40, "hidden_size": 128,
-        "num_layers": 1, "dropout" :0.1, "bidirectional": False,
-        "device": device
+        "num_layers": 1, "dropout" :0.1, "bidirectional": False
     }
-    model = LSTMWakeWord(**model_params)
+    model = LSTMWakeWord(**model_params, device=device)
     model = model.to(device)
     optimizer = optim.AdamW(model.parameters(), lr=args.lr)
     loss_fn = nn.BCEWithLogitsLoss()

@@ -65,7 +65,7 @@ def interactive(args):
             frames = []
             input('press enter to continue. the recoding will be {} seconds. press ctrl + c to exit'.format(args.seconds))
             time.sleep(0.2)  # so the mic don't pick up clicking sound
-            for i in range(int(listener.sample_rate/ listener.chunk * listener.record_seconds)):
+            for i in range(int((listener.sample_rate/listener.chunk) * listener.record_seconds)):
                 data = listener.stream.read(listener.chunk, exception_on_overflow = False)
                 frames.append(data)
             save_path = os.path.join(args.interactive_save_path, "{}.wav".format(index))
@@ -88,7 +88,7 @@ def main(args):
                 data = listener.stream.read(listener.chunk)
                 frames.append(data)
             else:
-                for i in range(int(listener.sample_rate/ listener.chunk * listener.record_seconds)):
+                for i in range(int((listener.sample_rate/listener.chunk) * listener.record_seconds)):
                     data = listener.stream.read(listener.chunk)
                     frames.append(data)
                 raise Exception('done recording')
