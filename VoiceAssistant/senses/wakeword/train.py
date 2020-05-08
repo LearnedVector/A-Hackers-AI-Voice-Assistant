@@ -83,8 +83,8 @@ def main(args):
     torch.manual_seed(1)
     device = torch.device('cuda' if use_cuda else 'cpu')
 
-    train_dataset = WakeWordData(data_json=args.train_data_json, sample_rate=args.sample_rate)
-    test_dataset = WakeWordData(data_json=args.test_data_json, sample_rate=args.sample_rate)
+    train_dataset = WakeWordData(data_json=args.train_data_json, sample_rate=args.sample_rate, valid=False)
+    test_dataset = WakeWordData(data_json=args.test_data_json, sample_rate=args.sample_rate, valid=True)
 
     kwargs = {'num_workers': args.num_workers, 'pin_memory': True} if use_cuda else {}
     train_loader = data.DataLoader(dataset=train_dataset,

@@ -11,10 +11,17 @@ def get_featurizer(sample_rate):
 
 class WakeWordData(torch.utils.data.Dataset):
 
-    def __init__(self, data_json, sample_rate=8000):
+    def __init__(self, data_json, sample_rate=8000, valid=False):
         self.sr = sample_rate
         self.data = pd.read_json(data_json, lines=True)
-        self.audio_transform = get_featurizer(sample_rate)
+        if valid:
+            self.audio_transform = get_featurizer(sample_rate)
+        else:
+            self.audio_transform = nn.Sequential(
+                get_featurizer(sample_rate),
+                torchaudio.transforms.FrequencyMasking(10),
+                torchaudio.transforms.TimeMasking(10)
+            )
 
     def __len__(self):
         return len(self.data)
