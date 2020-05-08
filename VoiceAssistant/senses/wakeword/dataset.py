@@ -17,9 +17,9 @@ class RandomCut(nn.Module):
     
     def forward(self, x):
         side = torch.randint(0, 1, (1,))
-        cut = torch.randint(0, self.max_cut, (1,))
+        cut = torch.randint(1, self.max_cut, (1,))
         if side == 0:
-            return x[:cut,:,:]
+            return x[:-cut,:,:]
         elif side == 1:
             return x[cut:,:,:]
 
@@ -77,5 +77,6 @@ def collate_fn(data):
     mfccs = nn.utils.rnn.pad_sequence(mfccs, batch_first=True)  # batch, seq_len, feature
     mfccs = mfccs.transpose(0, 1) # seq_len, batch, feature
     mfccs = rand_cut(mfccs)
+    #print(mfccs.shape)
     labels = torch.Tensor(labels)
     return mfccs, labels
