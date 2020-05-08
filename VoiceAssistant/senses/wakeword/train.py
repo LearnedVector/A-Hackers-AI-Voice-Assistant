@@ -149,7 +149,7 @@ def main(args):
     print("Best Epoch", best_epoch)
     print("\nTrain Report \n")
     print(best_train_report)
-    print("\nTest Report"n)
+    print("\nTest Report\n")
     print(best_test_report)
 
 
