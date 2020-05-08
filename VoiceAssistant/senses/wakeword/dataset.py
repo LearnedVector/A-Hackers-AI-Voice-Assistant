@@ -24,6 +24,50 @@ class RandomCut(nn.Module):
             return x[cut:,:,:]
 
 
+class SpecAugment(nn.Module):
+
+    def __init__(self, rate, policy=3, freq_mask=5, time_mask=5):
+        super(SpecAugment, self).__init__()
+
+        self.rate = rate
+
+        self.specaug = nn.Sequential(
+            torchaudio.transforms.FrequencyMasking(freq_mask_param=freq_mask),
+            torchaudio.transforms.TimeMasking(time_mask_param=time_mask)
+        )
+
+        self.specaug2 = nn.Sequential(
+            torchaudio.transforms.FrequencyMasking(freq_mask_param=freq_mask),
+            torchaudio.transforms.TimeMasking(time_mask_param=time_mask),
+            torchaudio.transforms.FrequencyMasking(freq_mask_param=freq_mask),
+            torchaudio.transforms.TimeMasking(time_mask_param=time_mask)
+        )
+
+        policies = { 1: self.policy1, 2: self.policy2, 3: self.policy3 }
+        self._forward = policies[policy]
+
+    def forward(self, x):
+        return self._forward(x)
+
+    def policy1(self, x):
+        probability = torch.rand(1, 1).item()
+        if self.rate > probability:
+            return  self.specaug(x)
+        return x
+
+    def policy2(self, x):
+        probability = torch.rand(1, 1).item()
+        if self.rate > probability:
+            return  self.specaug2(x)
+        return x
+
+    def policy3(self, x):
+        probability = torch.rand(1, 1).item()
+        if probability > 0.5:
+            return self.policy1(x)
+        return self.policy2(x)
+
+
 class WakeWordData(torch.utils.data.Dataset):
 
     def __init__(self, data_json, sample_rate=8000, valid=False):
@@ -34,8 +78,7 @@ class WakeWordData(torch.utils.data.Dataset):
         else:
             self.audio_transform = nn.Sequential(
                 get_featurizer(sample_rate),
-                torchaudio.transforms.FrequencyMasking(5),
-                torchaudio.transforms.TimeMasking(5)
+                SpecAugment(rate=0.5)
             )
 
     def __len__(self):
@@ -62,7 +105,7 @@ class WakeWordData(torch.utils.data.Dataset):
 # def random_cut(mfcc_batch):
 #     random = 
 
-rand_cut = RandomCut(max_cut=10)
+rand_cut = RandomCut(max_cut=7)
 
 def collate_fn(data):
     mfccs = []
