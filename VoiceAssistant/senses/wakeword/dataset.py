@@ -19,9 +19,9 @@ class RandomCut(nn.Module):
         side = torch.randint(0, 1, (1,))
         cut = torch.randint(0, self.max_cut, (1,))
         if side == 0:
-            return x[:,:,cut:]
+            return x[:cut,:,:]
         elif side == 1:
-            return x[:,:,:cut]
+            return x[cut:,:,:]
 
 
 class WakeWordData(torch.utils.data.Dataset):
@@ -34,7 +34,7 @@ class WakeWordData(torch.utils.data.Dataset):
         else:
             self.audio_transform = nn.Sequential(
                 get_featurizer(sample_rate),
-                RandomCut(max_cut=10)
+                # RandomCut(max_cut=10)
                 #torchaudio.transforms.FrequencyMasking(10),
                 #torchaudio.transforms.TimeMasking(10)
             )
@@ -60,8 +60,10 @@ class WakeWordData(torch.utils.data.Dataset):
 
         return mfcc, label
 
-def random_cut(mfcc_batch):
-    random = 
+# def random_cut(mfcc_batch):
+#     random = 
+
+rand_cut = RandomCut(max_cut=10)
 
 def collate_fn(data):
     mfccs = []
@@ -74,5 +76,6 @@ def collate_fn(data):
     # pad mfccs to ensure all tensors are same size in the time dim
     mfccs = nn.utils.rnn.pad_sequence(mfccs, batch_first=True)  # batch, seq_len, feature
     mfccs = mfccs.transpose(0, 1) # seq_len, batch, feature
+    mfccs = rand_cut(mfccs)
     labels = torch.Tensor(labels)
     return mfccs, labels
