@@ -9,6 +9,21 @@ def get_featurizer(sample_rate):
     return torchaudio.transforms.MFCC(sample_rate=sample_rate, log_mels=True)
 
 
+class RandomCut(nn.Module):
+
+    def __init__(self, max_cut=10):
+        super(RandomCut, self).__init__()
+        self.max_cut = max_cut
+    
+    def forward(self, x):
+        side = torch.randint(0, 1, (1,))
+        cut = torch.randint(0, self.max_cut, (1,))
+        if side == 0:
+            return x[:,:,cut:]
+        elif side == 1:
+            return x[:,:,:cut]
+
+
 class WakeWordData(torch.utils.data.Dataset):
 
     def __init__(self, data_json, sample_rate=8000, valid=False):
@@ -19,8 +34,9 @@ class WakeWordData(torch.utils.data.Dataset):
         else:
             self.audio_transform = nn.Sequential(
                 get_featurizer(sample_rate),
-                torchaudio.transforms.FrequencyMasking(10),
-                torchaudio.transforms.TimeMasking(10)
+                RandomCut(max_cut=10)
+                #torchaudio.transforms.FrequencyMasking(10),
+                #torchaudio.transforms.TimeMasking(10)
             )
 
     def __len__(self):
@@ -44,6 +60,8 @@ class WakeWordData(torch.utils.data.Dataset):
 
         return mfcc, label
 
+def random_cut(mfcc_batch):
+    random = 
 
 def collate_fn(data):
     mfccs = []
