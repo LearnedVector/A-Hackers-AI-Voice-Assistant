@@ -34,9 +34,8 @@ class WakeWordData(torch.utils.data.Dataset):
         else:
             self.audio_transform = nn.Sequential(
                 get_featurizer(sample_rate),
-                # RandomCut(max_cut=10)
-                #torchaudio.transforms.FrequencyMasking(10),
-                #torchaudio.transforms.TimeMasking(10)
+                torchaudio.transforms.FrequencyMasking(5),
+                torchaudio.transforms.TimeMasking(5)
             )
 
     def __len__(self):
