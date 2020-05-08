@@ -12,6 +12,7 @@ class LSTMWakeWord(nn.Module):
         self.hidden_size = hidden_size
         self.directions = 2 if bidirectional else 1
         self.device = device
+        self.layernorm = nn.LayerNorm(feature_size)
         self.lstm = nn.LSTM(input_size=feature_size, hidden_size=hidden_size,
                             num_layers=num_layers, dropout=dropout,
                             bidirectional=bidirectional)
@@ -23,6 +24,8 @@ class LSTMWakeWord(nn.Module):
                 torch.randn(n*d, batch_size, hs).to(self.device))
 
     def forward(self, x):
+        # x.shape => seq_len, batch, feature
+        x = self.layernorm(x)
         batch_size = x.size()[1]
         hidden = self._init_hidden(batch_size)
         out, (hn, cn) = self.lstm(x, hidden)

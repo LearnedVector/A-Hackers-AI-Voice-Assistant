@@ -26,7 +26,7 @@ class RandomCut(nn.Module):
 
 class SpecAugment(nn.Module):
 
-    def __init__(self, rate, policy=3, freq_mask=5, time_mask=5):
+    def __init__(self, rate, policy=3, freq_mask=2, time_mask=4):
         super(SpecAugment, self).__init__()
 
         self.rate = rate
@@ -90,7 +90,7 @@ class WakeWordData(torch.utils.data.Dataset):
 
         try:    
             file_path = self.data.key.iloc[idx]
-            waveform, sr = torchaudio.load(file_path)
+            waveform, sr = torchaudio.load(file_path, normalization=False)
             if sr > self.sr:
                 waveform = torchaudio.transforms.Resample(sr, self.sr)(waveform)
             mfcc = self.audio_transform(waveform)
@@ -105,7 +105,7 @@ class WakeWordData(torch.utils.data.Dataset):
 # def random_cut(mfcc_batch):
 #     random = 
 
-rand_cut = RandomCut(max_cut=7)
+rand_cut = RandomCut(max_cut=10)
 
 def collate_fn(data):
     mfccs = []

@@ -101,7 +101,7 @@ def main(args):
                                         **kwargs)
 
     model_params = {
-        "num_classes": 1, "feature_size": 40, "hidden_size": 128,
+        "num_classes": 1, "feature_size": 40, "hidden_size": args.hidden_size,
         "num_layers": 1, "dropout" :0.1, "bidirectional": False
     }
     model = LSTMWakeWord(**model_params, device=device)
