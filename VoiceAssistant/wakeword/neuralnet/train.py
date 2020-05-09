@@ -122,12 +122,10 @@ def main(args):
         # record best train and test
         if train_acc > best_train_acc:
             best_train_acc = train_acc
-            # best_train_report = train_report
         if test_acc > best_test_acc:
             best_test_acc = test_acc
-            # best_test_report = test_report
 
-        # saves checkpoint if metrics are good
+        # saves checkpoint if metrics are better than last
         if args.save_checkpoint_path and train_acc >= best_train_acc and test_acc >= best_test_acc:
             checkpoint_path = os.path.join(args.save_checkpoint_path, args.model_name + ".pt")
             print("found best checkpoint. saving model as", checkpoint_path)

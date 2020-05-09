@@ -10,12 +10,14 @@ def get_featurizer(sample_rate):
 
 
 class RandomCut(nn.Module):
+    """Augmentation technique that randomly cuts start or end of audio"""
 
     def __init__(self, max_cut=10):
         super(RandomCut, self).__init__()
         self.max_cut = max_cut
-    
+
     def forward(self, x):
+        """Randomly cuts from start or end of batch"""
         side = torch.randint(0, 1, (1,))
         cut = torch.randint(1, self.max_cut, (1,))
         if side == 0:
@@ -25,6 +27,7 @@ class RandomCut(nn.Module):
 
 
 class SpecAugment(nn.Module):
+    """Augmentation technique to add masking on the time or frequency domain"""
 
     def __init__(self, rate, policy=3, freq_mask=2, time_mask=4):
         super(SpecAugment, self).__init__()
@@ -69,6 +72,7 @@ class SpecAugment(nn.Module):
 
 
 class WakeWordData(torch.utils.data.Dataset):
+    """Load and process wakeword data"""
 
     def __init__(self, data_json, sample_rate=8000, valid=False):
         self.sr = sample_rate
@@ -102,12 +106,11 @@ class WakeWordData(torch.utils.data.Dataset):
 
         return mfcc, label
 
-# def random_cut(mfcc_batch):
-#     random = 
 
 rand_cut = RandomCut(max_cut=10)
 
 def collate_fn(data):
+    """Batch and pad wakeword data"""
     mfccs = []
     labels = []
     for d in data:

@@ -26,8 +26,7 @@ class LSTMWakeWord(nn.Module):
     def forward(self, x):
         # x.shape => seq_len, batch, feature
         x = self.layernorm(x)
-        batch_size = x.size()[1]
-        hidden = self._init_hidden(batch_size)
+        hidden = self._init_hidden(x.size()[1])
         out, (hn, cn) = self.lstm(x, hidden)
         out = self.classifier(hn)
         return out
