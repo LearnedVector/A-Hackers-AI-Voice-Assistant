@@ -48,7 +48,6 @@ class WakeWordEngine:
         self.model.eval().to('cpu')  #run on cpu
         self.featurizer = get_featurizer(sample_rate=8000)
         self.audio_q = list()
-        self.audio_buffer = []
 
     def save(self, waveforms, fname="wakeword_temp"):
         wf = wave.open(fname, "wb")
@@ -71,11 +70,9 @@ class WakeWordEngine:
             waveform, _ = torchaudio.load(fname, normalization=False)  # don't normalize on train
             mfcc = self.featurizer(waveform).transpose(1, 2).transpose(0, 1)
 
+            # TODO: read from buffer instead of saving and loading file
             # waveform = torch.Tensor([np.frombuffer(a, dtype=np.int16) for a in audio]).flatten()
             # mfcc = self.featurizer(waveform).transpose(0, 1).unsqueeze(1)
-            # print(mfcc.shape)
-            # print(mfcc.shape)
-            # print(mfcc)
 
             out = self.model(mfcc)
             pred = torch.round(F.sigmoid(out))
