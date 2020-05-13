@@ -20,8 +20,8 @@ class LSTMWakeWord(nn.Module):
 
     def _init_hidden(self, batch_size):
         n, d, hs = self.num_layers, self.directions, self.hidden_size
-        return (torch.randn(n*d, batch_size, hs).to(self.device),
-                torch.randn(n*d, batch_size, hs).to(self.device))
+        return (torch.zeros(n*d, batch_size, hs).to(self.device),
+                torch.zeros(n*d, batch_size, hs).to(self.device))
 
     def forward(self, x):
         # x.shape => seq_len, batch, feature
