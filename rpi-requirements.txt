@@ -10,3 +10,4 @@ pyaudio==0.2.11
 llvmlite==0.31.0
 librosa==0.7.2
 scikit-learn==0.22.2.post1
+sonopy==0.1.2
