@@ -3,14 +3,10 @@ import pyaudio
 import threading
 import time
 import argparse
-import sys
 import wave
-import random
 import torchaudio
 import torch
-import torch.nn.functional as F
 import numpy as np
-from collections import deque
 from neuralnet.dataset import get_featurizer
 from threading import Event
 
@@ -38,6 +34,7 @@ class Listener:
     def run(self, queue):
         thread = threading.Thread(target=self.listen, args=(queue,), daemon=True)
         thread.start()
+        print("\nWake Word Engine is now listening... \n")
 
 
 class WakeWordEngine:
@@ -75,7 +72,7 @@ class WakeWordEngine:
             # mfcc = self.featurizer(waveform).transpose(0, 1).unsqueeze(1)
 
             out = self.model(mfcc)
-            pred = torch.round(F.sigmoid(out))
+            pred = torch.round(torch.sigmoid(out))
             return pred.item()
 
     def inference_loop(self, action):
@@ -96,13 +93,61 @@ class WakeWordEngine:
         thread.start()
 
 
+class DemoAction:
+    """This demo action will just randomly say Arnold Schwarzenegger quotes
+
+        args: sensitivty. the lower the number the more sensitive the
+        wakeword is to activation.
+    """
+    def __init__(self, sensitivity=10):
+        # import stuff here to prevent engine.py from 
+        # importing unecessary modules during production usage
+        import os
+        import subprocess
+        import random
+
+        self.random = random
+        self.subprocess = subprocess
+        self.detect_in_row = 0
+        self.sensitivity = sensitivity
+        self.arnold_mp3 = [
+            os.path.join("../../fun/arnold_audio", x)
+            for x in os.listdir("../../fun/arnold_audio")
+        ]
+
+    def __call__(self, prediction):
+        if prediction == 1:
+            self.detect_in_row += 1
+            if self.detect_in_row == self.sensitivity:
+                self.play()
+                self.detect_in_row = 0
+        else:
+            self.detect_in_row = 0
+
+    def play(self):
+        filename = self.random.choice(self.arnold_mp3)
+        try:
+            print("playing", filename)
+            self.subprocess.check_output(['play', '-v', '.1', filename])
+        except Exception as e:
+            print(str(e))
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="testing the wakeword engine")
+    parser = argparse.ArgumentParser(description="demoing the wakeword engine")
     parser.add_argument('--model_file', type=str, default=None, required=True,
                         help='optimized file to load. use optimize_graph.py')
-    args = parser.parse_args()
+    parser.add_argument('--sensitivty', type=int, default=10, required=False,
+                        help='lower value is more sensitive to activations')
 
+    args = parser.parse_args()
     wakeword_engine = WakeWordEngine(args.model_file)
-    action = lambda x: print(x)
+    action = DemoAction(sensitivity=10)
+    
+    print("""\n*** Make sure you have sox installed on your system for the demo to work!!!
+    If you don't want to use sox, change the play function in the DemoAction class
+    in engine.py module to something that works with your system.\n
+    """)
+
     wakeword_engine.run(action)
     threading.Event().wait()
