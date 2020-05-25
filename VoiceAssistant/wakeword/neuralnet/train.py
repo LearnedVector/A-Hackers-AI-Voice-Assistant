@@ -6,10 +6,10 @@ import torch
 import torch.nn as nn
 import torch.utils.data as data
 import torch.optim as optim
-import torch.nn.functional as F
 from dataset import WakeWordData, collate_fn
 from model import LSTMWakeWord
 from sklearn.metrics import classification_report
+from tabulate import tabulate
 
 
 def save_checkpoint(checkpoint_path, model, optimizer, scheduler, model_params, notes=None):
@@ -38,7 +38,7 @@ def test(test_loader, model, device, epoch):
         for idx, (mfcc, label) in enumerate(test_loader):
             mfcc, label = mfcc.to(device), label.to(device)
             output = model(mfcc)
-            pred = F.sigmoid(output)
+            pred = torch.sigmoid(output)
             acc = binary_accuracy(pred, label)
             preds += torch.flatten(torch.round(pred)).cpu()
             labels += torch.flatten(label).cpu()
@@ -67,7 +67,7 @@ def train(train_loader, model, optimizer, loss_fn, device, epoch):
         losses.append(loss.item())
 
         # get predictions and labels for report
-        pred = F.sigmoid(output)
+        pred = torch.sigmoid(output)
         preds += torch.flatten(torch.round(pred)).cpu()
         labels += torch.flatten(label).cpu()
 
@@ -137,8 +137,12 @@ def main(args):
             best_test_report = test_report
             best_epoch = epoch
 
-        print("\ntrain acc:", train_acc, "test acc:", test_acc, "\n",
-            "best train acc", best_train_acc, "best test acc", best_test_acc)
+        table = [["Train ACC", train_acc], ["Test ACC", test_acc],
+                ["Best Train ACC", best_train_acc], ["Best Test ACC", best_test_acc],
+                ["Best Epoch", best_epoch]]
+        # print("\ntrain acc:", train_acc, "test acc:", test_acc, "\n",
+        #     "best train acc", best_train_acc, "best test acc", best_test_acc)
+        print(tabulate(table))
 
         scheduler.step(train_acc)
 
