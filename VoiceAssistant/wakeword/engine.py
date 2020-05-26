@@ -109,10 +109,12 @@ class DemoAction:
         self.random = random
         self.subprocess = subprocess
         self.detect_in_row = 0
+
         self.sensitivity = sensitivity
         self.arnold_mp3 = [
             os.path.join("../../fun/arnold_audio", x)
             for x in os.listdir("../../fun/arnold_audio")
+            if ".wav" in x
         ]
 
     def __call__(self, prediction):
@@ -143,11 +145,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
     wakeword_engine = WakeWordEngine(args.model_file)
     action = DemoAction(sensitivity=10)
-    
+
     print("""\n*** Make sure you have sox installed on your system for the demo to work!!!
     If you don't want to use sox, change the play function in the DemoAction class
     in engine.py module to something that works with your system.\n
     """)
-
+    # action = lambda x: print(x)
     wakeword_engine.run(action)
     threading.Event().wait()
