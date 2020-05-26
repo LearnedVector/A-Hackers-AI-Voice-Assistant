@@ -30,3 +30,37 @@ class LSTMWakeWord(nn.Module):
         out, (hn, cn) = self.lstm(x, hidden)
         out = self.classifier(hn)
         return out
+
+
+def conv_dw(inp, oup, stride):
+    return nn.Sequential(
+        nn.Conv2d(inp, inp, 3, stride, 1, groups=inp, bias=False),
+        nn.BatchNorm2d(inp),
+        nn.ReLU(inplace=True),
+        nn.Conv2d(inp, oup, 1, 1, 0, bias=False),
+        nn.BatchNorm2d(oup),
+        nn.ReLU(inplace=True),
+    )
+
+
+# class DepthWiseSeperableCNN(nn.Module):
+#     pass
+
+
+class SiameseWakeWord(nn.Module):
+
+    def __init__(self, num_classes, feature_size, filter_size,
+                num_layers, dropout, device='cpu'):
+        self.siamese_cnn = nn.Sequential(
+            nn.Conv1d(feature_size, filter_size, kernel_size=3, stride=3, padding=3//2),
+            nn.BatchNorm1d(filter_size),
+            nn.ReLU(),
+            nn.Dropout(dropout)
+        )
+        self.classifier = nn.Linear(filter_size, num_classes)
+
+    def forward(self, x):
+        print(x.shape)
+        x = self.siamese_cnn(x)
+        out = self.classifier(x)
+        return out
