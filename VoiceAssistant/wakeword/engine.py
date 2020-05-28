@@ -105,15 +105,17 @@ class DemoAction:
         import os
         import subprocess
         import random
+        from os.path import join, realpath
 
         self.random = random
         self.subprocess = subprocess
         self.detect_in_row = 0
 
         self.sensitivity = sensitivity
+        folder = realpath(join(realpath(__file__)), '..', '..', '..', 'fun', 'arnold_audio'))
         self.arnold_mp3 = [
             os.path.join("../../fun/arnold_audio", x)
-            for x in os.listdir("../../fun/arnold_audio")
+            for x in os.listdir(folder)
             if ".wav" in x
         ]
 
