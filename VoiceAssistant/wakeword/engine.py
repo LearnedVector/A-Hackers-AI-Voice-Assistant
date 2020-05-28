@@ -112,7 +112,7 @@ class DemoAction:
         self.detect_in_row = 0
 
         self.sensitivity = sensitivity
-        folder = realpath(join(realpath(__file__)), '..', '..', '..', 'fun', 'arnold_audio'))
+        folder = realpath(join(realpath(__file__)), '..', '..', '..', 'fun', 'arnold_audio')
         self.arnold_mp3 = [
             os.path.join("../../fun/arnold_audio", x)
             for x in os.listdir(folder)
