@@ -144,3 +144,70 @@ def collate_fn(data):
     #print(mfccs.shape)
     labels = torch.Tensor(labels)
     return mfccs, labels
+
+
+class TripletWakeWordData(WakeWordData):
+
+    def __init__(self, data_json, sample_rate=8000, valid=False):
+        super(TripletWakeWordData, self).__init__(data_json, sample_rate=8000, valid=False)
+    
+    def __getitem__(self, idx):
+        if torch.is_tensor(idx):
+            idx = idx.item()
+
+        try:    
+            anchor_file = self.data.anchor.iloc[idx]
+            positive_file = self.data.positive.iloc[idx]
+            negative_file = self.data.negative.iloc[idx]
+    
+            anchor_wav, sr1 = torchaudio.load(anchor_file, normalization=False)
+            positive_wav, sr2 = torchaudio.load(positive_file, normalization=False)
+            negative_wav, sr3 = torchaudio.load(negative_file, normalization=False)
+
+            if sr1 > self.sr:
+                anchor_wav = torchaudio.transforms.Resample(sr1, self.sr)(anchor_wav)
+            
+            if sr2 > self.sr:
+                positive_wav = torchaudio.transforms.Resample(sr2, self.sr)(positive_wav)
+
+            if sr3 > self.sr:
+                negative_wav = torchaudio.transforms.Resample(sr3, self.sr)(negative_wav)
+
+            anchor_mfcc = self.audio_transform(anchor_wav)
+            positive_mfcc = self.audio_transform(positive_wav)
+            negative_mfcc = self.audio_transform(negative_wav)
+
+
+        except Exception as e:
+            print(str(e), anchor_file, positive_file, negative_file)
+            return self.__getitem__(torch.randint(0, len(self), (1,)))
+
+        return anchor_mfcc, positive_mfcc, negative_mfcc
+
+def triplet_collate_fn(data, valid=True):
+    """Batch and pad wakeword data"""
+    anchor = []
+    positive = []
+    negative = []
+    for d in data:
+        a, p, n = d
+        anchor.append(a.squeeze(0).transpose(0, 1))
+        positive.append(p.squeeze(0).transpose(0, 1))
+        negative.append(n.squeeze(0).transpose(0, 1))
+    
+    # pad mfccs to ensure all tensors are same size in the time dim
+    anchor = nn.utils.rnn.pad_sequence(anchor, batch_first=True)  # batch, seq_len, feature
+    anchor = anchor.transpose(0, 1) # seq_len, batch, feature
+
+    positive = nn.utils.rnn.pad_sequence(positive, batch_first=True)  # batch, seq_len, feature
+    positive = positive.transpose(0, 1) # seq_len, batch, feature
+
+    negative = nn.utils.rnn.pad_sequence(negative, batch_first=True)  # batch, seq_len, feature
+    negative = negative.transpose(0, 1) # seq_len, batch, feature
+
+    if not valid:
+        anchor = rand_cut(anchor)
+        positive = rand_cut(positive)
+        negative = rand_cut(negative)
+
+    return anchor, positive, negative

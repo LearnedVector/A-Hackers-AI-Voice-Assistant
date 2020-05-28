@@ -32,35 +32,23 @@ class LSTMWakeWord(nn.Module):
         return out
 
 
-def conv_dw(inp, oup, stride):
-    return nn.Sequential(
-        nn.Conv2d(inp, inp, 3, stride, 1, groups=inp, bias=False),
-        nn.BatchNorm2d(inp),
-        nn.ReLU(inplace=True),
-        nn.Conv2d(inp, oup, 1, 1, 0, bias=False),
-        nn.BatchNorm2d(oup),
-        nn.ReLU(inplace=True),
-    )
-
-
-# class DepthWiseSeperableCNN(nn.Module):
-#     pass
-
-
 class SiameseWakeWord(nn.Module):
 
-    def __init__(self, num_classes, feature_size, filter_size,
-                num_layers, dropout, device='cpu'):
-        self.siamese_cnn = nn.Sequential(
-            nn.Conv1d(feature_size, filter_size, kernel_size=3, stride=3, padding=3//2),
+    def __init__(self, embedding_size, feature_size, filter_size, dropout):
+        super(SiameseWakeWord, self).__init__()
+        self.cnn = nn.Sequential(
+            nn.Conv1d(feature_size, filter_size, kernel_size=3, stride=1, padding=3//2),
             nn.BatchNorm1d(filter_size),
             nn.ReLU(),
             nn.Dropout(dropout)
         )
-        self.classifier = nn.Linear(filter_size, num_classes)
+        self.avg_pooling = nn.AdaptiveAvgPool1d(5)
+        self.embeddings = nn.Linear(filter_size*5, embedding_size)
 
     def forward(self, x):
-        print(x.shape)
-        x = self.siamese_cnn(x)
-        out = self.classifier(x)
+        x = x.transpose(0, 1).transpose(1, 2)
+        x = self.cnn(x)
+        x = self.avg_pooling(x)
+        x = x.reshape(x.size(0), -1)
+        out = self.embeddings(x)
         return out

@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.utils.data as data
 import torch.optim as optim
 from dataset import WakeWordData, collate_fn
-from model import LSTMWakeWord, SiameseWakeWord
+from model import LSTMWakeWord
 from sklearn.metrics import classification_report
 from tabulate import tabulate
 
@@ -119,6 +119,13 @@ def main(args):
         train_acc, train_report = train(train_loader, model, optimizer, loss_fn, device, epoch)
         test_acc, test_report = test(test_loader, model, device, epoch)
 
+        table = [["Train ACC", train_acc], ["Test ACC", test_acc],
+                ["Best Train ACC", best_train_acc], ["Best Test ACC", best_test_acc],
+                ["Best Epoch", best_epoch]]
+        print("\n\n** metrics table **")
+        print(tabulate(table))
+
+
         # record best train and test
         if train_acc > best_train_acc:
             best_train_acc = train_acc
@@ -136,13 +143,8 @@ def main(args):
             best_train_report = train_report
             best_test_report = test_report
             best_epoch = epoch
+            best_table = table
 
-        table = [["Train ACC", train_acc], ["Test ACC", test_acc],
-                ["Best Train ACC", best_train_acc], ["Best Test ACC", best_test_acc],
-                ["Best Epoch", best_epoch]]
-        # print("\ntrain acc:", train_acc, "test acc:", test_acc, "\n",
-        #     "best train acc", best_train_acc, "best test acc", best_test_acc)
-        print(tabulate(table))
 
         scheduler.step(train_acc)
 
@@ -153,6 +155,8 @@ def main(args):
     print(best_train_report)
     print("\nTest Report\n")
     print(best_test_report)
+    print("\n\n** best metrics table **")
+    print(tabulate(table))
 
 
 if __name__ == "__main__":
