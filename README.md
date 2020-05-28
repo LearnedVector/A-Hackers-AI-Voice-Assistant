@@ -24,4 +24,22 @@ If you are running with just the cpu
 If you are running on a cuda enabled machine 
 `docker build -f cpu.Dockerfile -t voiceassistant .`
 
-### run
+## Wake word
+
+### scripts
+For more details make sure to visit these files to look at script arguments and description
+
+`neuralnet/train.py` is used to train the model
+`neuralnet/optimize_graph.py` is used to create a production ready graph that can be used in `engine.py`
+`engine.py` is used to demo the wakeword model
+
+### data
+For more details make sure to visit these files to look at script arguments and description
+
+`collect_wakeword_audio.py` - used to collect wakeword and environment data
+`split_audio_into_chunks.py` - used to split audio into n second chunks
+`split_commonvoice.py` - if you download the common voice dataset, use this script to split it into n second chunks
+`create_wakeword_json.py` - used to create the wakeword json for training
+
+## Raspberry pi
+documenation to get this running on rpi is in progress...

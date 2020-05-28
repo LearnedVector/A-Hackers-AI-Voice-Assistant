@@ -20,7 +20,7 @@ def main(args):
     chunk_and_save(args.audio_file_name)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="script to split common voice data into chunks")
+    parser = argparse.ArgumentParser(description="script to split audio files into chunks")
     parser.add_argument('--seconds', type=int, default=None,
                         help='if set to None, then will record forever until keyboard interrupt')
     parser.add_argument('--audio_file_name', type=str, default=None, required=True,
