@@ -3,10 +3,21 @@ import pyaudio
 import threading
 import time
 import argparse
+<<<<<<< HEAD
 import wave
 import torchaudio
 import torch
 import numpy as np
+=======
+import sys
+import wave
+import random
+import torchaudio
+import torch
+import torch.nn.functional as F
+import numpy as np
+from collections import deque
+>>>>>>> d740909ed40cac72d35697b46f187ad8be93efa7
 from neuralnet.dataset import get_featurizer
 from threading import Event
 
