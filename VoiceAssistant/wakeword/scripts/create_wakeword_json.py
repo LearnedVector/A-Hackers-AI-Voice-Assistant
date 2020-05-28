@@ -47,6 +47,6 @@ if __name__ == "__main__":
     parser.add_argument('--save_json_path', type=str, default=None, required=True,
                         help='path to save json file')
 
-    args = parser.parse_args(args)
+    args = parser.parse_args()
 
     main(args)
