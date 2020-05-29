@@ -1,5 +1,6 @@
 # A Hackers AI Voice Assistant
-Build your own voice ai
+Build your own voice ai. This repo is for my [YouTube video series](https://www.youtube.com/playlist?list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW) on building an AI voice assistant with PyTorch
+
 
 
 ## Running on native machine
