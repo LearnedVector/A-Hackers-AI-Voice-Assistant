@@ -1,7 +1,12 @@
 # A Hackers AI Voice Assistant
 Build your own voice ai. This repo is for my [YouTube video series](https://www.youtube.com/playlist?list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW) on building an AI voice assistant with PyTorch
 
-
+TODO:
+- [x] wake word model and engine
+- [ ] pre-trained wake word model use for fine tuning on your own wakeword
+- [ ] speech recognition model, pretrained model, and engine
+- [ ] natural langauge underestanding model, pretrained model, and engine
+- [ ] speech synthesis model, pretrained model, and engine
 
 ## Running on native machine
 ### dependencies
