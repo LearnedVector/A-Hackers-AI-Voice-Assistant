@@ -5,7 +5,7 @@ TODO:
 - [x] wake word model and engine
 - [ ] pre-trained wake word model use for fine tuning on your own wakeword
 - [ ] speech recognition model, pretrained model, and engine
-- [ ] natural langauge underestanding model, pretrained model, and engine
+- [ ] natural langauge understanding model, pretrained model, and engine
 - [ ] speech synthesis model, pretrained model, and engine
 
 ## Running on native machine
