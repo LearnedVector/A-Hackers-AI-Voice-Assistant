@@ -114,7 +114,7 @@ class DemoAction:
         self.sensitivity = sensitivity
         folder = realpath(join(realpath(__file__)), '..', '..', '..', 'fun', 'arnold_audio')
         self.arnold_mp3 = [
-            os.path.join("../../fun/arnold_audio", x)
+            os.path.join(folder, x)
             for x in os.listdir(folder)
             if ".wav" in x
         ]
