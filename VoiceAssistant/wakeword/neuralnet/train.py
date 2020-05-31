@@ -7,7 +7,7 @@ import torch.nn as nn
 import torch.utils.data as data
 import torch.optim as optim
 from dataset import WakeWordData, collate_fn
-from model import LSTMWakeWord, SiameseWakeWord
+from model import LSTMWakeWord
 from sklearn.metrics import classification_report
 from tabulate import tabulate
 
