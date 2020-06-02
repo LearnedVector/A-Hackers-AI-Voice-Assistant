@@ -7,7 +7,7 @@ from pydub.utils import make_chunks
 # pandarallel.initialize(progress_bar=True)
 
 def main(args):
-    df = pd.read_csv(args.file_name sep='\t')
+    df = pd.read_csv(args.file_name, sep='\t')
     print(df.head())
     print('total data size:', len(df))
 
