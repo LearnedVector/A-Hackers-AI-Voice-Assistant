@@ -135,3 +135,6 @@ data/
 models/
 
 wakeword_temp
+tb_logs
+*.ckpt*
+core
