@@ -11,6 +11,7 @@ from argparse import ArgumentParser
 from model import SpeechRecognition
 from dataset import Data, collate_fn_padd
 from pytorch_lightning.loggers import TensorBoardLogger
+from pytorch_lightning.callbacks import ModelCheckpoint
 
 
 class SpeechModule(LightningModule):
@@ -20,22 +21,15 @@ class SpeechModule(LightningModule):
         self.model = model
         self.criterion = nn.CTCLoss(blank=28, zero_infinity=True)
         self.args = args
-    
+
     def forward(self, x, hidden):
         return self.model(x, hidden)
 
     def configure_optimizers(self):
         self.optimizer = optim.AdamW(self.model.parameters(), self.args.learning_rate)
-        # self.scheduler = optim.lr_scheduler.OneCycleLR(self.optimizer,
-        #                                     max_lr=self.args.learning_rate, 
-        #                                     steps_per_epoch=self.args.steps_per_epoch,
-        #                                     epochs=self.args.epochs,
-        #                                     div_factor=self.args.div_factor,
-        #                                     pct_start=self.args.pct_start,
-        #                                     anneal_strategy='linear')
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(
                                         self.optimizer, mode='min',
-                                        factor=0.25, patience=3)
+                                        factor=0.50, patience=6)
         return [self.optimizer], [self.scheduler]
 
     def step(self, batch):
@@ -68,8 +62,8 @@ class SpeechModule(LightningModule):
         return {'val_loss': loss}
 
     def validation_epoch_end(self, outputs):
-        # print(outputs.shape)
         avg_loss = torch.stack([x['val_loss'] for x in outputs]).mean()
+        self.scheduler.step(avg_loss)
         tensorboard_logs = {'val_loss': avg_loss}
         return {'val_loss': avg_loss, 'log': tensorboard_logs}
 
@@ -84,21 +78,35 @@ class SpeechModule(LightningModule):
                             pin_memory=True)
 
 
+def checkpoint_callback(args):
+    return ModelCheckpoint(
+        filepath=args.save_model_path,
+        save_top_k=True,
+        verbose=True,
+        monitor='val_loss',
+        mode='min',
+        prefix=''
+    )
+
 def main(args):
     h_params = SpeechRecognition.hyper_parameters
     h_params.update(args.hparams_override)
     model = SpeechRecognition(**h_params)
 
-    args.steps_per_epoch = 529
-    speech_module = SpeechModule(model, args)
+    if args.load_model_from:
+        speech_module = SpeechModule.load_from_checkpoint(args.load_model_from, model, args)
+    else:
+        speech_module = SpeechModule(model, args)
 
-    logger = TensorBoardLogger('tb_logs', name='speech_recognition')
+    logger = TensorBoardLogger(args.logdir, name='speech_recognition')
     trainer = Trainer(logger=logger)
 
     trainer = Trainer(
         max_epochs=args.epochs, gpus=args.gpus,
-        num_nodes=args.nodes, distributed_backend='ddp',
-        logger=logger, gradient_clip_val=1.0
+        num_nodes=args.nodes, distributed_backend='horovod',
+        logger=logger, gradient_clip_val=1.0,
+        val_check_interval=args.valid_every,
+        checkpoint_callback=checkpoint_callback(args)
     )
     trainer.fit(speech_module)
 
@@ -119,6 +127,14 @@ if __name__ == "__main__":
     parser.add_argument('--valid_every', default=1000, required=False, type=int,
                         help='valid after every N iteration')
 
+    # dir and path for models and logs
+    parser.add_argument('--save_model_path', default=None, required=True, type=str,
+                        help='path to save model')
+    parser.add_argument('--load_model_from', default=None, required=False, type=str,
+                        help='path to load a pretrain model to continue training')
+    parser.add_argument('--logdir', default='tb_logs', required=False, type=str,
+                        help='path to save logs')
+    
     # general
     parser.add_argument('--epochs', default=10, type=int, help='number of total epochs to run')
     parser.add_argument('--batch_size', default=64, type=int, help='size of batch')
@@ -133,5 +149,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args.hparams_override = ast.literal_eval(args.hparams_override)
     args.dparams_override = ast.literal_eval(args.dparams_override)
+
+
+    if args.save_model_path:
+       if not os.path.isdir(os.path.dirname(args.save_model_path)):
+           raise Exception("the directory for path {} does not exist".format(args.save_model_path))
 
     main(args)
