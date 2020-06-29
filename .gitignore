@@ -139,3 +139,6 @@ tb_logs
 *.ckpt*
 core
 ckpt
+audio_temp
+
+ctcdecode

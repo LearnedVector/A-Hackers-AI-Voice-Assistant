@@ -13,7 +13,7 @@ def trace(model):
 
 def main(args):
     print("loading model from", args.model_checkpoint)
-    checkpoint = torch.load(args.model_checkpoint)
+    checkpoint = torch.load(args.model_checkpoint, map_location=torch.device('cpu'))
     h_params = SpeechRecognition.hyper_parameters
     model = SpeechRecognition(**h_params)
 

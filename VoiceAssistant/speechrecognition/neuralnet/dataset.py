@@ -3,7 +3,7 @@ import torchaudio
 import torch.nn as nn
 import pandas as pd
 import numpy as np
-from utils import TextProcess
+from .utils import TextProcess
 
 
 # NOTE: add time stretch
@@ -63,6 +63,10 @@ class LogMelSpec(nn.Module):
         x = self.transform(x)  # mel spectrogram
         x = np.log(x + 1e-14)  # logrithmic, add small value to avoid inf
         return x
+
+
+def get_featurizer(sample_rate, n_feats=81):
+    return LogMelSpec(sample_rate=sample_rate, n_mels=n_feats,  win_length=160, hop_length=80)
 
 
 class Data(torch.utils.data.Dataset):

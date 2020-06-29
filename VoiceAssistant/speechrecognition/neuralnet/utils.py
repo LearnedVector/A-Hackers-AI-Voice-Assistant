@@ -1,3 +1,6 @@
+import torch
+
+
 class TextProcess:
 	def __init__(self):
 		char_map_str = """
@@ -56,6 +59,8 @@ class TextProcess:
 			string.append(self.index_map[i])
 		return ''.join(string).replace('<SPACE>', ' ')
 
+
+textprocess = TextProcess()
 
 def GreedyDecoder(output, labels, label_lengths, blank_label=28, collapse_repeated=True):
 	arg_maxes = torch.argmax(output, dim=2)
