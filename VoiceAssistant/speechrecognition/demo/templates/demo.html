@@ -77,15 +77,23 @@
       margin: 0 auto;
       white-space: pre-line;
     }
-  </style>
 
-  <!-- <script src="https://unpkg.com/wavesurfer.js"></script> -->
+    #transcript {
+      position: fixed;
+      top: 60%;
+      width: 100vw;
+      padding-left: 20vw;
+      padding-right: 20vw;
+      font-size: x-large;
+    }
+  </style>
 </head>
 
 <body>
   <main>
     <button onclick="init()">start</button>
   </main>
+  <div id="transcript"></div>
 </body>
 
 
@@ -143,6 +151,18 @@
   };
   createDOMElements();
 
+  const startTranscriptions = () => {
+    fetch("/start_asr").then(res => res.json()).then(data => console.log(data))
+    setInterval(() => {
+      fetch("/get_audio").then(res => res.json()).then(data => {
+        let doc = document.getElementById("transcript")
+        if (data !== "") {
+          doc.innerHTML = data
+        }
+      })
+    }, 500)
+  };
+
   const init = () => {
     // Creating initial DOM elements
     const audioContext = new AudioContext();
@@ -171,6 +191,8 @@
     }
 
     const a = new AudioVisualizer(audioContext, processFrame, processError);
+
+    startTranscriptions()
   };
 </script>
 

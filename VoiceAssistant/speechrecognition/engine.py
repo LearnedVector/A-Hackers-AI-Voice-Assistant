@@ -35,7 +35,7 @@ class Listener:
     def run(self, queue):
         thread = threading.Thread(target=self.listen, args=(queue,), daemon=True)
         thread.start()
-        print("\nWake Word Engine is now listening... \n")
+        print("\Speech Recognition engine is now listening... \n")
 
 
 class SpeechRecognitionEngine:
@@ -51,6 +51,7 @@ class SpeechRecognitionEngine:
         self.out_args = None
         self.beam_search = CTCBeamDecoder(beam_size=100, kenlm_path=ken_lm_file)
         self.context_length = context_length * 50 # multiply by 50 because each 50 from output frame is 1 second
+        self.start = False
 
     def save(self, waveforms, fname="audio_temp"):
         wf = wave.open(fname, "wb")
@@ -113,16 +114,16 @@ class DemoAction:
             self.asr_results = trascript
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="demoing the speech recognition engine")
+    parser = argparse.ArgumentParser(description="demoing the speech recognition engine in terminal.")
     parser.add_argument('--model_file', type=str, default=None, required=True,
                         help='optimized file to load. use optimize_graph.py')
-    parser.add_argument('--ken_lm_file', type=str, default=None, required=True,
+    parser.add_argument('--ken_lm_file', type=str, default=None, required=False,
                         help='If you have an ngram lm use to decode')
 
     args = parser.parse_args()
     asr_engine = SpeechRecognitionEngine(args.model_file, args.ken_lm_file)
     action = DemoAction()
-    
+
     asr_engine.run(action)
     threading.Event().wait()
     # activate speech recognition engine
