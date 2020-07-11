@@ -103,7 +103,7 @@ def main(args):
 
     trainer = Trainer(
         max_epochs=args.epochs, gpus=args.gpus,
-        num_nodes=args.nodes, distributed_backend='horovod',
+        num_nodes=args.nodes, distributed_backend=args.dist_backend,
         logger=logger, gradient_clip_val=1.0,
         val_check_interval=args.valid_every,
         checkpoint_callback=checkpoint_callback(args)
@@ -118,6 +118,8 @@ if __name__ == "__main__":
     parser.add_argument('-g', '--gpus', default=1, type=int, help='number of gpus per node')
     parser.add_argument('-w', '--data_workers', default=0, type=int,
                         help='n data loading workers, default 0 = main process only')
+    parser.add_argument('-db', '--dist_backend', default='ddp', type=str,
+                        help='which distributed backend to use. defaul ddp')
 
     # train and valid
     parser.add_argument('--train_file', default=None, required=True, type=str,
