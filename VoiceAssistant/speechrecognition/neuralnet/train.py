@@ -94,7 +94,7 @@ def main(args):
     model = SpeechRecognition(**h_params)
 
     if args.load_model_from:
-        speech_module = SpeechModule.load_from_checkpoint(args.load_model_from, model, args)
+        speech_module = SpeechModule.load_from_checkpoint(args.load_model_from, model=model, args=args)
     else:
         speech_module = SpeechModule(model, args)
 
@@ -103,10 +103,11 @@ def main(args):
 
     trainer = Trainer(
         max_epochs=args.epochs, gpus=args.gpus,
-        num_nodes=args.nodes, distributed_backend=args.dist_backend,
+        num_nodes=args.nodes, distributed_backend=None,
         logger=logger, gradient_clip_val=1.0,
         val_check_interval=args.valid_every,
-        checkpoint_callback=checkpoint_callback(args)
+        checkpoint_callback=checkpoint_callback(args),
+        resume_from_checkpoint=args.resume_from_checkpoint
     )
     trainer.fit(speech_module)
 
@@ -134,6 +135,8 @@ if __name__ == "__main__":
                         help='path to save model')
     parser.add_argument('--load_model_from', default=None, required=False, type=str,
                         help='path to load a pretrain model to continue training')
+    parser.add_argument('--resume_from_checkpoint', default=None, required=False, type=str,
+                        help='check path to resume from')
     parser.add_argument('--logdir', default='tb_logs', required=False, type=str,
                         help='path to save logs')
     

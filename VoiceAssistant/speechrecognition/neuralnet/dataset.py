@@ -3,7 +3,7 @@ import torchaudio
 import torch.nn as nn
 import pandas as pd
 import numpy as np
-from .utils import TextProcess
+from utils import TextProcess
 
 
 # NOTE: add time stretch
@@ -159,4 +159,3 @@ def collate_fn_padd(data):
     # mask = (batch != 0).cuda(gpu)
     # return batch, lengths, mask
     return spectrograms, labels, input_lengths, label_lengths
-
