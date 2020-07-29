@@ -11,7 +11,8 @@ TODO:
 ## Running on native machine
 ### dependencies
 * python3
-* portaudio (for pyaudio to work) 
+* portaudio (for recording with pyaudio to work)
+* [ctcdecode](https://github.com/parlance/ctcdecode) - for speechrecognition
 
 If you're on mac you can install `portaudio` using `homebrew`
 
@@ -70,6 +71,9 @@ For more details make sure to visit these files to look at script arguments and 
 
 3. test
     1. test using the `engine.py` script
+
+
+## Speech Recognition
 
 
 ## Raspberry pi
