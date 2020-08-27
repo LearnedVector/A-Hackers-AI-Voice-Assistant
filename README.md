@@ -11,7 +11,7 @@ TODO:
 - [ ] natural langauge understanding model, pretrained model, and engine
 - [ ] speech synthesis model, pretrained model, and engine
 - [ ] skills framework
-- [ ] Core A.I. Voice Assistant logic to integrate wake word, speech recongition, natural language understanding, speech sysnthesis, the skills framework.
+- [ ] Core A.I. Voice Assistant logic to integrate wake word, speech recongition, natural language understanding, speech sysnthesis, and the skills framework.
 
 ## Running on native machine
 ### dependencies
