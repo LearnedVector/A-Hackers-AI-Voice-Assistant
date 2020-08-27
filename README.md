@@ -1,5 +1,5 @@
 # A Hackers AI Voice Assistant
-Build your own voice ai. This repo is for my [YouTube video series](https://whttps://discord.gg/9wSTT4Fww.youtube.com/playlist?list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW) on building an AI voice assistant with PyTorch.
+Build your own voice ai. This repo is for my [YouTube video series](https://www.youtube.com/playlist?list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW) on building an AI voice assistant with PyTorch.
 
 ## Looking for contributors!
 Looking for contributors to help build out the assistant. There is still alot of work to do. This would be a good oppurtunity to learn Machine Learning Engineering. It'll teach you how to train and productionize models, and how to build an entire ml system from the gound up. If you're interested Join the [Discord Server](https://discord.gg/9wSTT4F)
@@ -37,6 +37,7 @@ If you are running on a cuda enabled machine
 `docker build -f cpu.Dockerfile -t voiceassistant .`
 
 ## Wake word
+[Youtube Video For WakeWord](https://www.youtube.com/watch?v=ob0p7G2QoHA&list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW)
 
 ### scripts
 For more details make sure to visit these files to look at script arguments and description
@@ -79,6 +80,8 @@ For more details make sure to visit these files to look at script arguments and 
 
 
 ## Speech Recognition
+[YouTube Video for Speech Recognition](https://www.youtube.com/watch?v=YereI6Gn3bM&list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW&index=2)
+
 The pretrained model can be found here at this [google drive](https://drive.google.com/file/d/1jcNOI3jb4GkixA_wuNCIGz-Qjc9OmdxH/view?usp=sharing)
 
 1. Collect your own data - the pretrain model was trained on common voice. To make this model work for you, you can collect about an hour or so of your own voice using the [Mimic Recording Studio](https://github.com/MycroftAI/mimic-recording-studio). They have prompts that you can read from.
