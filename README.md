@@ -75,6 +75,7 @@ For more details make sure to visit these files to look at script arguments and 
 
 ## Speech Recognition
 The pretrained model can be found here at this [google drive](https://drive.google.com/file/d/1jcNOI3jb4GkixA_wuNCIGz-Qjc9OmdxH/view?usp=sharing)
+
 1. Collect your own data - the pretrain model was trained on common voice. To make this model work for you, you can collect about an hour or so of your own voice using the [Mimic Recording Studio](https://github.com/MycroftAI/mimic-recording-studio). They have prompts that you can read from.
     1. collect data using mimic recording studio, or your own dataset.
     2. be sure to chop up your audio into 5 - 16 seconds chunks max.
@@ -85,7 +86,7 @@ The pretrained model can be found here at this [google drive](https://drive.goog
         {"key": "/path/to/audio/speech.wav, "text": "another text example"}
     ```
 
-2 Train model
+2. Train model
     1. use `train.py` to fine tune. checkout the [train.py](https://github.com/LearnedVector/A-Hackers-AI-Voice-Assistant/blob/master/VoiceAssistant/speechrecognition/neuralnet/train.py#L115) argparse for other arguments
     ```
        python train.py --train_file /path/to/train/json --valid_file /path/to/valid/json --load_model_from /path/to/pretrain/model.zip
