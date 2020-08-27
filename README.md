@@ -42,19 +42,19 @@ If you are running on a cuda enabled machine
 ### scripts
 For more details make sure to visit these files to look at script arguments and description
 
-`neuralnet/train.py` is used to train the model
+`wakeword/neuralnet/train.py` is used to train the model
 
-`neuralnet/optimize_graph.py` is used to create a production ready graph that can be used in `engine.py`
+`wakeword/neuralnet/optimize_graph.py` is used to create a production ready graph that can be used in `engine.py`
 
-`engine.py` is used to demo the wakeword model
+`wakeword/engine.py` is used to demo the wakeword model
 
-`collect_wakeword_audio.py` - used to collect wakeword and environment data
+`wakeword/scripts/collect_wakeword_audio.py` - used to collect wakeword and environment data
 
-`split_audio_into_chunks.py` - used to split audio into n second chunks
+`wakeword/scripts/split_audio_into_chunks.py` - used to split audio into n second chunks
 
-`split_commonvoice.py` - if you download the common voice dataset, use this script to split it into n second chunks
+`wakeword/scripts/split_commonvoice.py` - if you download the common voice dataset, use this script to split it into n second chunks
 
-`create_wakeword_json.py` - used to create the wakeword json for training
+`wakeword/scripts/create_wakeword_json.py` - used to create the wakeword json for training
 
 ### Steps to train and demo your wakeword model
 
@@ -81,6 +81,20 @@ For more details make sure to visit these files to look at script arguments and 
 
 ## Speech Recognition
 [YouTube Video for Speech Recognition](https://www.youtube.com/watch?v=YereI6Gn3bM&list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW&index=2)
+
+### scripts
+For more details make sure to visit these files to look at script arguments and description
+
+`spechrecognition/neuralnet/train.py` is used to train the model
+
+`spechrecognition/neuralnet/optimize_graph.py` is used to create a production ready graph that can be used in `engine.py`
+
+`spechrecognition/engine.py` is used to demo the speech recognizer model
+
+`spechrecognition/demo/demo.py` is used to demo the speech recognizer model with a Web GUI
+
+
+### Steps for pretraining or finetuning speech recognition model
 
 The pretrained model can be found here at this [google drive](https://drive.google.com/file/d/1jcNOI3jb4GkixA_wuNCIGz-Qjc9OmdxH/view?usp=sharing)
 
