@@ -1,5 +1,8 @@
 # A Hackers AI Voice Assistant
-Build your own voice ai. This repo is for my [YouTube video series](https://www.youtube.com/playlist?list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW) on building an AI voice assistant with PyTorch
+Build your own voice ai. This repo is for my [YouTube video series](https://whttps://discord.gg/9wSTT4Fww.youtube.com/playlist?list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW) on building an AI voice assistant with PyTorch.
+
+## Looking for contributors!
+Looking for contributors to help build out the assistant. There is still alot of work to do. This would be a good oppurtunity to learn Machine Learning Engineering. It'll teach you how to train and productionize models, and how to build an entire ml system from the gound up. If you're interested Join the [Discord Server](https://discord.gg/9wSTT4F)
 
 TODO:
 - [x] wake word model and engine
