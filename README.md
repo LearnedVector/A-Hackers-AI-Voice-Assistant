@@ -34,7 +34,7 @@ If you are running with just the cpu
 `docker build -f cpu.Dockerfile -t voiceassistant .`
 
 If you are running on a cuda enabled machine 
-`docker build -f cpu.Dockerfile -t voiceassistant .`
+`docker build -f Dockerfile -t voiceassistant .`
 
 ## Wake word
 [Youtube Video For WakeWord](https://www.youtube.com/watch?v=ob0p7G2QoHA&list=PL5rWfvZIL-NpFXM9nFr15RmEEh4F4ePZW)
