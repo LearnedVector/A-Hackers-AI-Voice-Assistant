@@ -96,7 +96,7 @@ For more details make sure to visit these files to look at script arguments and 
 
 ### Steps for pretraining or finetuning speech recognition model
 
-The pretrained model can be found here at this [google drive](https://drive.google.com/file/d/1jcNOI3jb4GkixA_wuNCIGz-Qjc9OmdxH/view?usp=sharing)
+The pretrained model can be found here at this [google drive](https://drive.google.com/drive/folders/14ljfpvisK1tz8fvFYETbdWqR3lOmJ_2Y?usp=sharing)
 
 1. Collect your own data - the pretrain model was trained on common voice. To make this model work for you, you can collect about an hour or so of your own voice using the [Mimic Recording Studio](https://github.com/MycroftAI/mimic-recording-studio). They have prompts that you can read from.
     1. collect data using mimic recording studio, or your own dataset.
@@ -111,10 +111,10 @@ The pretrained model can be found here at this [google drive](https://drive.goog
 2. Train model
     1. use `train.py` to fine tune. checkout the [train.py](https://github.com/LearnedVector/A-Hackers-AI-Voice-Assistant/blob/master/VoiceAssistant/speechrecognition/neuralnet/train.py#L115) argparse for other arguments
     ```
-       python train.py --train_file /path/to/train/json --valid_file /path/to/valid/json --load_model_from /path/to/pretrain/model.zip
+       python train.py --train_file /path/to/train/json --valid_file /path/to/valid/json --load_model_from /path/to/pretrain/speechrecognition.ckpt
     ```
    2. To train from scratch omit the `--load_model_from` argument in train.py
-   3. after model training us `optimize_graph.py` to create an optimized pytorch model
+   3. after model training us `optimize_graph.py` to create a frozen optimized pytorch model. The pretrained optimized torch model can be found in the google drive link as `speechrecognition.zip`
 
 
 3. test
