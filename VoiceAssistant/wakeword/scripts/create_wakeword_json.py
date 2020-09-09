@@ -21,7 +21,7 @@ def main(args):
         })
     for o in ones:
         data.append({
-            "key": os.path.join(args.one_label_dir, z),
+            "key": os.path.join(args.one_label_dir, o),
             "label": 1
         })
     random.shuffle(data)
