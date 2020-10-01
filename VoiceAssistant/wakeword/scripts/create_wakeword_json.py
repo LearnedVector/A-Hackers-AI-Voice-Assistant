@@ -10,7 +10,7 @@ import random
 
 
 def main(args):
-    zeroes = os.listdir(args.zero_label_dir)
+    zeros = os.listdir(args.zero_label_dir)
     ones = os.listdir(args.one_label_dir)
 
     data = []
