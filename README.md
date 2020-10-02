@@ -54,7 +54,7 @@ For more details make sure to visit these files to look at script arguments and 
 
 `wakeword/scripts/split_commonvoice.py` - if you download the common voice dataset, use this script to split it into n second chunks
 
-`wakeword/scripts/create_wakeword_json.py` - used to create the wakeword json for training
+`wakeword/scripts/create_wakeword_jsons.py` - used to create the wakeword json for training
 
 ### Steps to train and demo your wakeword model
 
@@ -63,7 +63,7 @@ For more details make sure to visit these files to look at script arguments and 
 1. collect data
     1. environment and wakeword data can be collected using `python collect_wakeword_audio.py`
     2. be sure to collect other speech data like common voice. split the data into n seconds chunk with `split_audio_into_chunks.py`.
-    3. put data into two seperate directory named `0` and `1`. `0` for non wakeword, `1` for wakeword. use `create_wakeword_json.py` to create train and test json
+    3. put data into two seperate directory named `0` and `1`. `0` for non wakeword, `1` for wakeword. use `create_wakeword_jsons.py` to create train and test json
     4. create a train and test json in this format...
         ```
         // make each sample is on a seperate line
