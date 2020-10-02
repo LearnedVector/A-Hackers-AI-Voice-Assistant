@@ -111,7 +111,7 @@ The pretrained model can be found here at this [google drive](https://drive.goog
     ```
         use `create_jsons.py` to create train and test json's with the data from Mimic Recording Studio.
         
-        `python create_jsons.py --file_folder_directory /dir/to/the/folder/with/the/studio/data --save_json_path /path/where/you/want/them/saved`
+        python create_jsons.py --file_folder_directory /dir/to/the/folder/with/the/studio/data --save_json_path /path/where/you/want/them/saved
    
         (The Mimic Recording Studio files are usually stored in ~/mimic-recording-studio-master/backend/audio_files/[random_string].)
         
