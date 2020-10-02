@@ -12,7 +12,7 @@ import random
 def main(args):
     zeros = os.listdir(args.zero_label_dir)
     ones = os.listdir(args.one_label_dir)
-
+    percent = args.percent
     data = []
     for z in zeros:
         data.append({
@@ -26,11 +26,28 @@ def main(args):
         })
     random.shuffle(data)
 
-    with open(args.save_json_path, 'w') as f:
-        for d in data:
-            line = json.dumps(d)
+    f = open(args.save_json_path +"/"+ "train.json", "w")
+    
+    with open(args.save_json_path +"/"+ 'train.json','w') as f:
+        d = len(data)
+        i=0
+        while(i<d-d/percent):
+            r=data[i-1]
+            line = json.dumps(r)
             f.write(line + "\n")
+            i = i+1
+    
+    f = open(args.save_json_path +"/"+ "test.json", "w")
 
+    with open(args.save_json_path +"/"+ 'test.json','w') as f:
+        d = len(data)
+        i=int(d-d/percent)
+        while(i<d):
+            r=data[i-1]
+            line = json.dumps(r)
+            f.write(line + "\n")
+            i = i+1
+    
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="""
@@ -46,7 +63,8 @@ if __name__ == "__main__":
                         help='directory of clips with one labels')
     parser.add_argument('--save_json_path', type=str, default=None, required=True,
                         help='path to save json file')
-
+    parser.add_argument('--percent', type=int, default=10, required=False,
+                        help='percent of clips put into test.json instead of train.json')
     args = parser.parse_args()
 
     main(args)
