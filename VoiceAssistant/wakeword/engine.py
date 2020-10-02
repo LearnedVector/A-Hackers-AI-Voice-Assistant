@@ -3,8 +3,7 @@ import pyaudio
 import threading
 import time
 import argparse
-import wave
-import torchaudio
+import wave , torchaudio
 import torch
 import numpy as np
 from neuralnet.dataset import get_featurizer
