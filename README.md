@@ -121,7 +121,7 @@ The pretrained model can be found here at this [google drive](https://drive.goog
         
         python commonvoice_create_jsons.py --file_path /path/to/commonvoice/file/.tsv --save_json_path /path/where/you/want/them/saved 
     
-    if you dont want to convert use `--convert false` 
+    if you dont want to convert use `--not-convert` 
         
 2. Train model
     1. use `train.py` to fine tune. checkout the [train.py](https://github.com/LearnedVector/A-Hackers-AI-Voice-Assistant/blob/master/VoiceAssistant/speechrecognition/neuralnet/train.py#L115) argparse for other arguments
