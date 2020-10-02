@@ -87,7 +87,7 @@ For more details make sure to visit these files to look at script arguments and 
 
 `speechrecognition/scripts/mimic_create_jsons.py`is used to create the train.json and test.json files with Mimic Recording Studio 
 
-`speechrecognition/scripts/commonvoice_create_jsons.py`is used to create the train.json and test.json files with the Commonvoice dataset
+`speechrecognition/scripts/commonvoice_create_jsons.py`is used to convert mp3 into wav and create the train.json and test.json files with the Commonvoice dataset
 
 `spechrecognition/neuralnet/train.py` is used to train the model
 
@@ -117,10 +117,11 @@ The pretrained model can be found here at this [google drive](https://drive.goog
 
     (The Mimic Recording Studio files are usually stored in ~/mimic-recording-studio-master/backend/audio_files/[random_string].) 
     
-    use `commonvoice_create_jsons.py` to create train and test json's with the data from Commonvoice by Mozilla
+    use `commonvoice_create_jsons.py` to convert from mp3 to wav and to create train and test json's with the data from Commonvoice by Mozilla
         
-        python commonvoice_create_jsons.py --file_path /path/to/commonvoice/file/.tsv --save_json_path /path/where/you/want/them/saved
-
+        python commonvoice_create_jsons.py --file_path /path/to/commonvoice/file/.tsv --save_json_path /path/where/you/want/them/saved 
+    
+    if you dont want to convert use `--convert false` 
         
 2. Train model
     1. use `train.py` to fine tune. checkout the [train.py](https://github.com/LearnedVector/A-Hackers-AI-Voice-Assistant/blob/master/VoiceAssistant/speechrecognition/neuralnet/train.py#L115) argparse for other arguments
