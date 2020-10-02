@@ -37,10 +37,10 @@ def main(args):
     
     f = open(args.save_json_path +"/"+ "test.json", "w")
 
-    with open(args.save_json_path +"/"+ 'test.json','w') as f:
+   with open(args.save_json_path +"/"+ 'test.json','w') as f:
         d = len(data)
-        i=0
-        while(i<d/percent):
+        i=int(d-d/percent)
+        while(i<d):
             r=data[i-1]
             line = json.dumps(r)
             f.write(line + "\n")
