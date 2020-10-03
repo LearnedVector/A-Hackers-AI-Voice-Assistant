@@ -22,7 +22,7 @@ TODO:
 If you're on mac you can install `portaudio` using `homebrew`
 
 ### using virtualenv (recommend)
-1. `virtualenv virtualassistant.venv`
+1. `virtualenv voiceassistant.venv`
 2. `source voiceassistant.venv/bin/activate`
 
 ### pip packages
