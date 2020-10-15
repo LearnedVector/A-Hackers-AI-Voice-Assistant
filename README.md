@@ -21,7 +21,7 @@ TODO:
 
 If you're on mac you can install `portaudio` using `homebrew`
 
-**If you are using windows, some things may not work. For example, torchaudio. I suggest trying this on linux or mac, or use wsl2 on windows**
+**NOTICE: If you are using windows, some things may not work. For example, torchaudio. I suggest trying this on linux or mac, or use wsl2 on windows**
 
 ### using virtualenv (recommend)
 1. `virtualenv voiceassistant.venv`
