@@ -18,7 +18,7 @@ def main(args):
         chunks = make_chunks(audio, length)
         names = []
         for i, chunk in enumerate(chunks):
-            _name = file.split(".mp3")[0] + ".wav"
+            _name = file.split(".")[0] + ".wav"
             name = "{}_{}".format(i, _name)
             wav_path = os.path.join(args.save_path, name)
             chunk.export(wav_path, format="wav")
