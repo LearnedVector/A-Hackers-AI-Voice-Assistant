@@ -31,8 +31,8 @@ def main(args):
     with open(args.save_json_path +"/"+ 'train.json','w') as f:
         d = len(data)
         i=0
-        while(i<d-d/percent):
-            r=data[i-1]
+        while(i<d-int(d/percent)):
+            r=data[i]
             line = json.dumps(r)
             f.write(line + "\n")
             i = i+1
@@ -43,7 +43,7 @@ def main(args):
         d = len(data)
         i=int(d-d/percent)
         while(i<d):
-            r=data[i-1]
+            r=data[i]
             line = json.dumps(r)
             f.write(line + "\n")
             i = i+1
