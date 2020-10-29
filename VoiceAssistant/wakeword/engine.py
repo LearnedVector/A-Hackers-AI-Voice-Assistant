@@ -132,7 +132,7 @@ class WakeWordEngine:
 
 class DemoAction:
     """This demo action will just randomly say Arnold Schwarzenegger quotes
-        args: sensitivty. the lower the number the more sensitive the
+        args: sensitivity. the lower the number the more sensitive the
         wakeword is to activation.
     """
     def __init__(self):
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="demoing the wakeword engine")
     parser.add_argument('--model_file', type=str, default=None, required=True,
                         help='optimized file to load. use optimize_graph.py')
-    parser.add_argument('--sensitivty', type=float, default=0.9, required=False,
+    parser.add_argument('--sensitivity', type=float, default=0.85, required=False,
                         help='lower value is more sensitive to activations')
 
     print("""\n*** Make sure you have sox installed on your system for the demo to work!!!
@@ -178,5 +178,5 @@ if __name__ == "__main__":
     wakeword_engine = WakeWordEngine(args.model_file)
     action = DemoAction()
 
-    wakeword_engine.run(callback = action, sensitivity = 0.80)
+    wakeword_engine.run(callback = action, sensitivity = args.sensitivity)
     threading.Event().wait()
