@@ -85,6 +85,11 @@ class WakeWordEngine:
             return value, acc
 
     def inference_loop(self, callback, sensitivity):
+        """
+        If the situation is silent, it starts predicting.
+        Args: sensitivity. the lower the number the more sensitive the
+        wakeword is to activation.
+        """
         while True:
             if not self.listener.silent:
                 if len(self.audio_q) > 25:
@@ -119,12 +124,43 @@ class WakeWordEngine:
             elif self.listener.silent > 2 and not len(self.prediction):
                 self.prediction = []
 
-
     def run(self, callback, sensitivity):
         self.listener.run(self.audio_q)
         thread = threading.Thread(target=self.inference_loop, args = (callback, sensitivity), daemon=True)
         thread.start()
 
+
+class DemoAction:
+    """This demo action will just randomly say Arnold Schwarzenegger quotes
+        args: sensitivty. the lower the number the more sensitive the
+        wakeword is to activation.
+    """
+    def __init__(self):
+        # import stuff here to prevent engine.py from
+        # importing unecessary modules during production usage
+        import os
+        import subprocess
+        import random
+        from os.path import join, realpath
+
+        self.random = random
+        self.subprocess = subprocess
+        self.detect_in_row = 0
+
+        folder = realpath(join(realpath(__file__), '..', '..', '..', 'fun', 'arnold_audio'))
+        self.arnold_mp3 = [
+            os.path.join(folder, x)
+            for x in os.listdir(folder)
+            if ".wav" in x
+        ]
+
+    def __call__(self, prediction):
+        filename = self.random.choice(self.arnold_mp3)
+        try:
+            print("playing", filename)
+            self.subprocess.check_output(['play', '-v', '.1', filename])
+        except Exception as e:
+            print(str(e))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="demoing the wakeword engine")
@@ -140,7 +176,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     wakeword_engine = WakeWordEngine(args.model_file)
-    action = lambda: print('Wakeword detected!')
+    action = DemoAction()
 
     wakeword_engine.run(callback = action, sensitivity = 0.80)
     threading.Event().wait()
