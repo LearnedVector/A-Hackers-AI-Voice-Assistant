@@ -24,6 +24,7 @@
         - It best to have 2 data frame
             - df_er: sentence #, words, entity_tag
             - df_ir: sentence#, intent, scenario
+                - we don't we intent for each word because, these are the targets for sentence classfication
     - I need a new coloum call words
         - Get it by spliting answer_normalized
         - replace nan with answer_annotation
@@ -35,3 +36,5 @@
             - what are the entity for word with no actual entity?
                 - 0 
             - Now given a sentence, can now produce word:entity tag
+        - need strip the entity tag
+        
