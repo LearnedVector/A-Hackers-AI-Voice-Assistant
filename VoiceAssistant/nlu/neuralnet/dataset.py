@@ -35,7 +35,7 @@ class IntentScenarioDataset(torch.utils.data.Dataset):
                 None,
                 add_special_token=True,
                 max_length = self.max_len,
-                pad_to_max_length=True
+                padding = 'max_length'
             )
             ids = out['input_ids']
             mask = out['attention_mask']
