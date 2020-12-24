@@ -152,7 +152,7 @@
 |game_type|                    3|
 
 |   Column |      Non-Null Count|   Dtype | 
----  ------      --------------   ----- 
+|---------|  --------------|   -----    | 
 | 0   Sentence # | 172163 non-null |  int64 |
 |1   words |       172163 non-null |  object|
 |2   entity|      172163 non-null|  object|
