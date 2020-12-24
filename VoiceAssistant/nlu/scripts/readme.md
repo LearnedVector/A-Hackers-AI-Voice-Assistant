@@ -153,7 +153,7 @@
 
 |   Column |      Non-Null Count|   Dtype | 
 |---------|  --------------|   -----    | 
-| 0   Sentence # | 172163 non-null |  int64 |
-|1   words |       172163 non-null |  object|
-|2   entity|      172163 non-null|  object|
+|  Sentence # | 172163 non-null |  int64 |
+|  words |       172163 non-null |  object|
+|  entity|      172163 non-null|  object|
 
