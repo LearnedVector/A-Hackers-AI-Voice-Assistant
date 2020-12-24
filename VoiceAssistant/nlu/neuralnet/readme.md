@@ -68,4 +68,9 @@
             - Do post padding for batching puropose
                 - ids
                 - label
+### Notes
+    - Increase the max_len by 2 to take into account the special token
+    - Try weighted crossentropy loss becasue do to skewed distribution of classes 
+    - Change the dataset such that non-entity has 0?
+        - dont need, we need prediction for even non-entity words
             
