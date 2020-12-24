@@ -1,9 +1,11 @@
+#%%
 import pandas as pd
-import config
 import re
-
+import sys
+sys.path.append('../')
+import neuralnet.config
 '''
-This is a script which preprocess the Natural Language Understanding dataset introduce by Xingkun Liu in the paper
+This is a script to  preprocess the Natural Language Understanding dataset introduced by Xingkun Liu in the paper
 Benchmarking Natural Language Understanding Services for building Conversational Agents.
 @InProceedings{XLiu.etal:IWSDS2019,
   author    = {Xingkun Liu, Arash Eshghi, Pawel Swietojanski and Verena Rieser},
@@ -17,7 +19,7 @@ Benchmarking Natural Language Understanding Services for building Conversational
   url       = {http://www.xx.xx/xx/}
 }
 https://github.com/xliuhw/NLU-Evaluation-Data
-An error was found  line of the  the original csv dataset file and was corrected to the following:
+An error was found  in a line of  the original csv dataset file and was corrected to the following:
 980;25817;weather;query;IRR_XL;is the [place_name : city] hot or cold in terms of [weather_descriptor : temperature] [query_detail : if it is a coastal area] then is the [weather_descriptor : humidity] high or low;null;date, location, time;is the city hot or cold in terms of temperature if it is a coastal areathen is the humidity high or low;Is the city  hot or cold in terms of temperature .If it is a coastal area,then is the humidity high or low.;How would you ask your PDA about the weather in another city?
 To utilize this script please rectify the error.
 '''
@@ -110,7 +112,8 @@ def make_dataset():
     return er_dataset,is_dataset
 #=== End of preprocessing ===#
 
-# a,b = make_dataset()    
+#a,b = make_dataset()    
+# %%
 # a.to_csv('../data/er_dataset.csv')
 # b.to_csv('../data/is_dataset.csv')
 if __name__ == "__main__":
