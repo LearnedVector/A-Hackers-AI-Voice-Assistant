@@ -1,15 +1,9 @@
-# %%
-from numpy.lib.function_base import select
 import torch
 import config
-
-
-
-        
-        
-        
-        
 class IntentScenarioDataset(torch.utils.data.Dataset):
+    '''
+    Dataset class for Intent and Scenario Classification
+    '''
     def __init__(self,text,intent,scenario,
                  require_text=True):
         self.texts = text 
@@ -49,6 +43,9 @@ class IntentScenarioDataset(torch.utils.data.Dataset):
         }
             
 class EntityDataset(torch.utils.data.Dataset):
+    '''
+    Dataset class for entity recognition
+    '''
     def __init__(self, text, entity):
         self.texts = text
         self.entity = entity
@@ -98,6 +95,9 @@ class EntityDataset(torch.utils.data.Dataset):
         }
 
 class NLUDataset(torch.utils.data.Dataset):
+    '''
+    A wrapper Dataset classjj
+    '''
     def __init__(self, text,entity,intent,scenario):
         self.texts = text
         self.entity = entity

@@ -57,7 +57,7 @@
         - Step
             - Encode the word
             - Update the label
-            - Adjust the index
+            - Trim to seq
             - Add special tokens
                 - ids 
                 - label
@@ -68,4 +68,4 @@
             - Do post padding for batching puropose
                 - ids
                 - label
-            -
+            
