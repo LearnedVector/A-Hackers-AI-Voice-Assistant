@@ -21,7 +21,7 @@ def loss_func(logits, targets, mask, num_labels):
 
 def eval_fn(data_loader,model,device):
     model.eval()
-    final_entity_loss, final_intent_loss,final_scenario_loss = 0,0,0
+    final_loss = 0
     with torch.no_grad():
         for batch in tqdm(data_loader, total=len(data_loader)):
             for k,v in batch.items():
@@ -35,29 +35,24 @@ def eval_fn(data_loader,model,device):
             entity_loss =  loss_func(entity_logits,batch['target_entity'])
             intent_loss =  loss_func(intent_logits,batch['target_intent'])
             scenario_loss =  loss_func(scenario_logits,batch['target_scenario'])
-            final_entity_loss += entity_loss
-            final_intent_loss += intent_loss
-            final_scenario_loss += scenario_loss
+            
+            loss = entity_loss + intent_loss + scenario_loss
 
-    return (final_entity_loss/len(data_loader),
-            final_intent_loss/len(data_loader),
-            final_scenario_loss/len(data_loader))
-    
+            final_loss += loss
+    return final_loss/len(data_loader)
 def train_fn(data_loader,
              model,
-             entity_optimizer,intent_optimizer,scenario_optimizer,
-             entity_scheduler,intent_scheduler,scenario_scheduler,
+             optimizer,
+             scheduler,
              device):
 
     model.train()
-    final_entity_loss, final_intent_loss,final_scenario_loss = 0,0,0
+    final_loss = 0
     for batch in tqdm(data_loader, total=len(data_loader)):
         for k,v in batch.items():
             batch[k] = v.to(device)
 
-        entity_optimizer.zero_grad()
-        intent_optimizer.zero_grad()
-        scenario_optimizer.zero_grad()
+        optimizer.zero_grad()
 
         (entity_logits,
          intent_logits,
@@ -66,23 +61,14 @@ def train_fn(data_loader,
                                   batch['token_type_ids'])
 
         entity_loss =  loss_func(entity_logits,batch['target_entity'])
-        entity_loss.backward()
         intent_loss =  loss_func(intent_logits,batch['target_intent'])
-        intent_loss.backward()
         scenario_loss =  loss_func(scenario_logits,batch['target_scenario'])
-        scenario_loss.backward()
 
-        entity_optimizer.step()
-        intent_optimizer.step()
-        scenario_optimizer.step()
+        loss = entity_loss + intent_loss + scenario_loss
+        loss.backward()
 
-        entity_scheduler.step()
-        intent_scheduler.step()
-        scenario_scheduler.step()
+        optimizer.step()
+        scheduler.step()
 
-        final_entity_loss += entity_loss
-        final_intent_loss += intent_loss
-        final_scenario_loss += scenario_loss
-    return (final_entity_loss/len(data_loader),
-            final_intent_loss/len(data_loader),
-            final_scenario_loss/len(data_loader))
+        final_loss += loss
+    return final_loss/len(data_loader)

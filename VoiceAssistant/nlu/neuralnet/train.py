@@ -143,7 +143,6 @@ if __name__ == "__main__":
     # %%
     s, e , enc = process_entity_data(config.ER_DATASET_PATH)
     # %%
-    max_
     # %%
     i,s,ei,es = proccess_itent_scenario_data(config.IS_DATASET_PATH)
 

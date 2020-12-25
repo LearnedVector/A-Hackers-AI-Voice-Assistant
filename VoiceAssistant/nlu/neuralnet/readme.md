@@ -78,11 +78,14 @@
     - Do I need multiple optimizers?
         - one way is to add the loss of all the classification task and use 1 optimizer to reach optimum
         - Do I need to send the parameters of bert to the optimizer?
-            - yes,
+            - No,
             - https://mccormickml.com/2019/07/22/BERT-fine-tuning/#4-train-our-classification-model
             - send all model paramters to the optimizer, including berts. Which makes sense, we need to adjust bert to our task. 
+            - https://jg8610.github.io/Multi-Task/
+            - Joint training is done when we have 1 dataset and multiple labels 
         - If yes, Do I need to separate out the parameters, so that entity optimizer don't get parameters of intent?
             - https://medium.com/@kajalgupta/multi-task-learning-with-deep-neural-networks-7544f8b7b4e3
             - https://github.com/google-research/bert/issues/504
-            
+    - Change engine so that it takes one optimizer, passing multiple optimizer is not scaleable and alot repeating code
+
             
