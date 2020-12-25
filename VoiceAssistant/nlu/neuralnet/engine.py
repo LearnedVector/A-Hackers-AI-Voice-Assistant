@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch
 import tqdm
+
+from model import NLUModel
 def loss_func(logits, targets, mask, num_labels):
     criterion = nn.CrossEntropyLoss()
     
@@ -17,11 +19,36 @@ def loss_func(logits, targets, mask, num_labels):
     loss = criterion(logits,active_targets)
     return loss
 
+def eval_fn(data_loader,model,device):
+    model.eval()
+    final_entity_loss, final_intent_loss,final_scenario_loss = 0,0,0
+    with torch.no_grad():
+        for batch in tqdm(data_loader, total=len(data_loader)):
+            for k,v in batch.items():
+                batch[k] = v.to(device)
+            (entity_logits,
+            intent_logits,
+            scenario_logits) = model(batch['ids'], 
+                                    batch['mask'],
+                                    batch['token_type_ids'])
+
+            entity_loss =  loss_func(entity_logits,batch['target_entity'])
+            intent_loss =  loss_func(intent_logits,batch['target_intent'])
+            scenario_loss =  loss_func(scenario_logits,batch['target_scenario'])
+            final_entity_loss += entity_loss
+            final_intent_loss += intent_loss
+            final_scenario_loss += scenario_loss
+
+    return (final_entity_loss/len(data_loader),
+            final_intent_loss/len(data_loader),
+            final_scenario_loss/len(data_loader))
+    
 def train_fn(data_loader,
              model,
              entity_optimizer,intent_optimizer,scenario_optimizer,
              entity_scheduler,intent_scheduler,scenario_scheduler,
              device):
+
     model.train()
     final_entity_loss, final_intent_loss,final_scenario_loss = 0,0,0
     for batch in tqdm(data_loader, total=len(data_loader)):

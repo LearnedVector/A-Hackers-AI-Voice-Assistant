@@ -1,6 +1,5 @@
 import torch.nn as nn
 import transformers
-
 import config 
 class NLUModel(nn.Module):
     def __init__(self,num_entity, num_intent, num_scenario):
