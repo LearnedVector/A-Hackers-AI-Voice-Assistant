@@ -22,15 +22,16 @@ class NLUModel(nn.Module):
     def forward(self, ids,mask,token_type_ids):
         hs,cls_hs = self.bert(ids,
                               attention_mask=mask,
-                              token_type_ids=token_type_ids)
+                              token_type_ids=token_type_ids,
+                              return_dict=False)
 
         entity_hs = self.drop_1(hs)
         intent_hs = self.drop_1(cls_hs)
         scenario_hs = self.drop_1(cls_hs)
 
         entity_hs = self.out_entity(entity_hs)
-        intent_hs = self.drop_1(intent_hs)
-        scenario_hs = self.drop_1(scenario_hs)
+        intent_hs = self.out_intent(intent_hs)
+        scenario_hs = self.out_scenario(scenario_hs)
 
         return entity_hs,intent_hs,scenario_hs
 

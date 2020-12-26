@@ -1,11 +1,11 @@
 import torch
 import config
-class IntentScenarioDataset(torch.utils.data.Dataset):
+class IntentScenarioDataset:
     '''
     Dataset class for Intent and Scenario Classification
     '''
     def __init__(self,text,intent,scenario,
-                 require_text=True):
+                 require_text=False):
         self.texts = text 
         self.intent = intent
         self.scenario = scenario
@@ -20,7 +20,7 @@ class IntentScenarioDataset(torch.utils.data.Dataset):
     def __getitem__(self,item):
         text = self.texts[item]
         intent = self.intent[item]
-        scenario = self.intent[item]
+        scenario = self.scenario[item]
 
         ids, mask, token_type_ids = None, None, None
         if self.require_text:
@@ -34,15 +34,24 @@ class IntentScenarioDataset(torch.utils.data.Dataset):
             ids = out['input_ids']
             mask = out['attention_mask']
             token_type_ids = out['token_type_ids']
-        return {
-            'ids': torch.tensor(ids,dtype=torch.long),
-            'target_intent': torch.tensor(intent,dtype=torch.long),
-            'target_scenario': torch.tensor(scenario,dtype=torch.long),
-            'mask': torch.tensor(mask,dtype=torch.long),
-            'token_type_ids': torch.tensor(token_type_ids,dtype=torch.long)
-        }
+            return {
+                'ids': torch.tensor(ids,dtype=torch.long),
+                'target_intent': torch.tensor(intent,dtype=torch.long),
+                'target_scenario': torch.tensor(scenario,dtype=torch.long),
+                'mask': torch.tensor(mask,dtype=torch.long),
+                'token_type_ids': torch.tensor(token_type_ids,dtype=torch.long)
+            }
+        else:
+            return {
+                'ids': None,
+                'target_intent': torch.tensor(intent,dtype=torch.long),
+                'target_scenario': torch.tensor(scenario,dtype=torch.long),
+                'mask': None,
+                'token_type_ids':None
+            }
             
-class EntityDataset(torch.utils.data.Dataset):
+            
+class EntityDataset:
     '''
     Dataset class for entity recognition
     '''
@@ -123,7 +132,7 @@ class NLUDataset(torch.utils.data.Dataset):
             'target_intent': intent_scenario_item['target_intent'],
             'target_scenario':intent_scenario_item['target_scenario'],
             'mask': entity_item['mask'],
-            'token_type_ids': entity_item['token_type_id'],
+            'token_type_ids': entity_item['token_type_ids'],
         }
         
         

@@ -1,18 +1,21 @@
-# %%
+import torch
 from torch.utils.data import DataLoader
+from transformers import AdamW
+from transformers import get_linear_schedule_with_warmup
+
 import pandas as pd 
+import numpy as np
+from tqdm import tqdm
 import joblib
 from sklearn import preprocessing
 from sklearn import model_selection
 
+
 import config 
+import engine
 from dataset import NLUDataset 
 from model import NLUModel
 
-n = NLUModel(2,2,2)
-for n,p in n.named_parameters():
-    print(n)
-# %%
 def process_entity_data(data_path):
     """Loads the preprocessed entity recognition dataset and returns the 
     X and Y needed for fitting bert to do entity recognition.
@@ -65,9 +68,8 @@ def proccess_itent_scenario_data(data_path):
     scenario = df.groupby('Sentence #')['scenario'].apply(list).values
 
     return intent,scenario,enc_intent, enc_scenario
-
 def run():
-    sentences, target_entity , enc_entity = process_entity_data(config.ER_DATASET_PATH)
+    sentences, target_entity , enc_entity, _ = process_entity_data(config.ER_DATASET_PATH)
     target_intent,target_scenario,enc_intent, enc_scenario = proccess_itent_scenario_data(config.IS_DATASET_PATH)
     
     num_entity, num_intent, num_scenario = len(enc_entity.classes_),len(enc_intent.classes_),len(enc_scenario.classes_)
@@ -76,7 +78,7 @@ def run():
         'enc_intent': enc_intent,
         'enc_scenario': enc_scenario
     }
-    joblib.dump(meta_data, 'meta_data.bin')
+    ##joblib.dump(meta_data, 'meta_data.bin')
     
     (train_sentences,
      test_sentences,
@@ -100,7 +102,7 @@ def run():
                                train_scenario)
     train_data_loader = DataLoader(train_dataset,
                                    batch_size = config.TRAIN_BATCH_SIZE,
-                                   num_workers= 4)
+                                   num_workers= 1)
     test_dataset = NLUDataset(test_sentences,
                               test_entity,
                               test_intent,
@@ -128,27 +130,37 @@ def run():
         
     ]
     
+    num_train_steps = len(train_sentences) // (config.TRAIN_BATCH_SIZE * config.EPOCHS)
+    optimizer = AdamW(optimizer_parameters, lr=3e-5)
+    scheduler =  get_linear_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=0,
+        num_training_steps=num_train_steps
+    )
     
+    #testing for 1 batch
+    train_batch = next(iter(train_data_loader))
+    test_batch = next(iter(test_data_loader))
     
-    
+    best_loss = np.inf
+    for epoch in tqdm(range(config.EPOCHS),total=config.EPOCHS):
+        train_loss = engine.train_fn(train_data_loader,
+                                    net,
+                                    optimizer,
+                                    scheduler,
+                                    device,
+                                    train_batch)
+        test_loss = engine.eval_fn(test_data_loader,
+                                   net,
+                                   device,
+                                   test_batch)
+        print(f'Epoch: {epoch}, Train Loss:{train_loss}, Test Loss:{test_loss}')
+        if test_loss < best_loss and config.SAVE_MODEL:
+            torch.save(net.state_dict(), config.MODEL_PATH)
+            best_loss = test_loss
 
-    
-    
-    
-    
-
-# %%
 if __name__ == "__main__":
-
-    # %%
-    s, e , enc = process_entity_data(config.ER_DATASET_PATH)
-    # %%
-    # %%
-    i,s,ei,es = proccess_itent_scenario_data(config.IS_DATASET_PATH)
+    run()
 
 
 
-
-
-
-# %%

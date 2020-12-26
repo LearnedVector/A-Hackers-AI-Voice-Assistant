@@ -87,5 +87,6 @@
             - https://medium.com/@kajalgupta/multi-task-learning-with-deep-neural-networks-7544f8b7b4e3
             - https://github.com/google-research/bert/issues/504
     - Change engine so that it takes one optimizer, passing multiple optimizer is not scaleable and alot repeating code
+    - Put starting lr to a hyperparameter
 
             
