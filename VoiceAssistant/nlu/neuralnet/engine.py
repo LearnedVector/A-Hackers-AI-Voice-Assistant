@@ -1,6 +1,6 @@
-from logging import FATAL
 import torch.nn as nn
 import torch
+from sklearn.metrics import precision_recall_fscore_support
 
 from model import NLUModel
 def loss_func(logits, targets, mask, num_labels, entity=False):
@@ -21,58 +21,66 @@ def loss_func(logits, targets, mask, num_labels, entity=False):
         loss = criterion(logits,targets.view(-1))
     return loss
 
-
-def eval_fn(data_loader,model,device):
+def get_precision_recall(logits,targets):
+    #function to get precsion_recall after each epoch
+    probs = torch.softmax(logits, dim=1)
+    y_hat = torch.argmax(probs, dim=1).numpy()
+    targets = targets.numpy()
+    percision, recall , fs, _ = precision_recall_fscore_support(y_hat, targets, average='micro')
+    return percision,recall,fs 
+    
+def eval_fn(data_loader,model,device,batch):
     model.eval()
     final_loss = 0
     with torch.no_grad():
-        for batch in data_loader:
-            for k,v in batch.items():
-                batch[k] = v.to(device)
-            (entity_logits,
-            intent_logits,
-            scenario_logits) = model(batch['ids'], 
-                                    batch['mask'],
-                                    batch['token_type_ids'])
+        # for batch in data_loader:
+        for k,v in batch.items():
+            batch[k] = v.to(device)
+        (entity_logits,
+        intent_logits,
+        scenario_logits) = model(batch['ids'], 
+                                batch['mask'],
+                                batch['token_type_ids'])
 
-            entity_loss =  loss_func(entity_logits,batch['target_entity'],batch['mask'],model.num_entity, entity=True)
-            intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
-            scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
-            
-            loss = entity_loss + intent_loss + scenario_loss
-
-            final_loss += loss
+        entity_loss =  loss_func(entity_logits,batch['target_entity'],batch['mask'],model.num_entity, entity=True)
+        intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
+        scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
+        
+        loss = entity_loss + intent_loss + scenario_loss
+        
+        
+        final_loss += loss
     return final_loss/len(data_loader)
 def train_fn(data_loader,
              model,
              optimizer,
              scheduler,
              device,
-             ):
+             batch):
 
     model.train()
     final_loss = 0
-    for batch in data_loader:
-        for k,v in batch.items():
-            batch[k] = v.to(device)
+    # for batch in data_loader:
+    for k,v in batch.items():
+        batch[k] = v.to(device)
 
-        optimizer.zero_grad()
+    optimizer.zero_grad()
 
-        (entity_logits,
-            intent_logits,
-            scenario_logits) = model(batch['ids'], 
-                                    batch['mask'],
-                                    batch['token_type_ids'])
+    (entity_logits,
+        intent_logits,
+        scenario_logits) = model(batch['ids'], 
+                                batch['mask'],
+                                batch['token_type_ids'])
 
-        entity_loss =  loss_func(entity_logits,batch['target_entity'],batch['mask'],model.num_entity, entity=True)
-        intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
-        scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
+    entity_loss =  loss_func(entity_logits,batch['target_entity'],batch['mask'],model.num_entity, entity=True)
+    intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
+    scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
 
-        loss = entity_loss + intent_loss + scenario_loss
-        loss.backward()
+    loss = entity_loss + intent_loss + scenario_loss
+    loss.backward()
 
-        optimizer.step()
-        scheduler.step()
+    optimizer.step()
+    scheduler.step()
 
-        final_loss += loss
+    final_loss += loss
     return final_loss/len(data_loader)

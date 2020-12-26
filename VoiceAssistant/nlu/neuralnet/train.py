@@ -1,4 +1,5 @@
 import torch
+from torch.utils.tensorboard import SummaryWriter 
 from torch.utils.data import DataLoader
 from transformers import AdamW
 from transformers import get_linear_schedule_with_warmup
@@ -94,7 +95,24 @@ def run():
             target_intent,
             target_scenario,
             random_state=50,
-            test_size=0.1
+            test_size=0.20
+        )
+     
+    (train_sentences,
+     val_sentences,
+     train_entity,
+     val_entity,
+     train_intent,
+     val_intent,
+     train_scenario,
+     val_scenario
+     )= model_selection.train_test_split(
+            train_sentences,
+            train_entity,
+            train_intent,
+            train_scenario,
+            random_state=50,
+            test_size=0.25
         )
     train_dataset = NLUDataset(train_sentences,
                                train_entity,
@@ -103,6 +121,13 @@ def run():
     train_data_loader = DataLoader(train_dataset,
                                    batch_size = config.TRAIN_BATCH_SIZE,
                                    num_workers= 1)
+    val_dataset = NLUDataset(val_sentences,
+                               val_entity,
+                               val_intent,
+                               val_scenario)
+    val_data_loader = DataLoader(val_dataset,
+                                 batch_size = config.TRAIN_BATCH_SIZE,
+                                 num_workers= 1)
     test_dataset = NLUDataset(test_sentences,
                               test_entity,
                               test_intent,
@@ -110,6 +135,7 @@ def run():
     test_data_loader = DataLoader(test_dataset,
                                    batch_size = config.TEST_BATCH_SIZE,
                                    num_workers=1)
+
 
     device = config.DEVICE 
     net = NLUModel(num_entity, num_intent, num_scenario)
@@ -138,23 +164,37 @@ def run():
         num_training_steps=num_train_steps
     )
     
-    
+    #testing for 1 batch
+    train_batch = next(iter(train_data_loader))
+    test_batch = next(iter(test_data_loader))
+    writer = SummaryWriter(log_dir=config.LOG_PATH)
     best_loss = np.inf
     for epoch in tqdm(range(config.EPOCHS),total=config.EPOCHS):
         train_loss = engine.train_fn(train_data_loader,
                                     net,
                                     optimizer,
                                     scheduler,
-                                    device)
-        test_loss = engine.eval_fn(test_data_loader,
-                                   net,
-                                   device)
-                                   
-        print(f'Epoch: {epoch}, Train Loss:{train_loss}, Test Loss:{test_loss}')
-        if test_loss < best_loss and config.SAVE_MODEL:
-            torch.save(net.state_dict(), config.MODEL_PATH)
-            best_loss = test_loss
+                                    device,
+                                    train_batch)
 
+        val_loss = engine.eval_fn(val_data_loader,
+                                  net,
+                                  device,
+                                  test_batch)
+        print(f'Epoch: {epoch}, Train Loss:{train_loss}, Val Loss:{val_loss}')
+        writer.add_scalars('Loss',
+                           {'Train':train_loss, 'Validation':val_loss},
+                           epoch)
+
+        if train_loss < best_loss and config.SAVE_MODEL:
+            torch.save(net.state_dict(), config.MODEL_PATH)
+            best_loss = train_loss
+    test_loss = engine.eval_fn(test_data_loader,
+                                net,
+                                device,
+                                test_batch)
+    writer.add_scalar('Test Loss',test_loss)
+    writer.close()
 if __name__ == "__main__":
     run()
 
