@@ -120,14 +120,14 @@ def run():
                                train_scenario)
     train_data_loader = DataLoader(train_dataset,
                                    batch_size = config.TRAIN_BATCH_SIZE,
-                                   num_workers= 1)
+                                   num_workers= 4)
     val_dataset = NLUDataset(val_sentences,
                                val_entity,
                                val_intent,
                                val_scenario)
     val_data_loader = DataLoader(val_dataset,
                                  batch_size = config.TRAIN_BATCH_SIZE,
-                                 num_workers= 1)
+                                 num_workers= 4)
     test_dataset = NLUDataset(test_sentences,
                               test_entity,
                               test_intent,
@@ -165,8 +165,9 @@ def run():
     )
     
     #testing for 1 batch
-    train_batch = next(iter(train_data_loader))
-    test_batch = next(iter(test_data_loader))
+    # train_batch = next(iter(train_data_loader))
+    # test_batch = next(iter(test_data_loader))
+
     writer = SummaryWriter(log_dir=config.LOG_PATH)
     best_loss = np.inf
     loop = tqdm(range(config.EPOCHS),total=config.EPOCHS,leave=False)
@@ -175,13 +176,13 @@ def run():
                                     net,
                                     optimizer,
                                     scheduler,
-                                    device,
-                                    train_batch)
+                                    device
+                                    )
 
         val_loss = engine.eval_fn(val_data_loader,
                                   net,
-                                  device,
-                                  test_batch)
+                                  device
+                                  )
         print(f'Epoch: {epoch}, Train Loss:{train_loss}, Val Loss:{val_loss}')
         writer.add_scalars('Loss',
                            {'Train':train_loss, 'Validation':val_loss},
@@ -197,8 +198,8 @@ def run():
     test_loss,pre_dict, rec_dict, fs_dict,fig_dict = engine.test_fn(test_data_loader,
                                                                     net,
                                                                     device,
-                                                                    enc_list,
-                                                                    test_batch)
+                                                                    enc_list
+                                                                    )
     writer.add_scalar('Test Loss',test_loss)
     writer.add_scalars('Precision', pre_dict)
     writer.add_scalars('Recall', rec_dict)

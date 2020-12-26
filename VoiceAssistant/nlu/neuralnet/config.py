@@ -10,9 +10,9 @@ LOG_PATH = '../log'
 SAVE_MODEL = False
 #Hyper-parameters
 MAX_LEN = 61+2
-TRAIN_BATCH_SIZE = 1
+TRAIN_BATCH_SIZE = 16
 TEST_BATCH_SIZE = 1
-EPOCHS = 20
+EPOCHS = 3
 
 #Model selection parameter
 BASE_MODEL = 'bert-base-uncased'
