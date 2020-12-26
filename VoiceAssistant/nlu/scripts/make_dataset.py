@@ -105,7 +105,7 @@ def preprocess_raw_df(df):
     return df
 
 def make_dataset():
-    df = pd.read_csv(config.DATASET_PATH,sep=';', encoding='latin-1')    
+    df = pd.read_csv(config.RAW_DATASET_PATH,sep=';', encoding='latin-1')    
     df = preprocess_raw_df(df)
     er_dataset = entity_recognition_dataset(df)
     is_dataset = intent_scenario_classfication_dataset(df)
