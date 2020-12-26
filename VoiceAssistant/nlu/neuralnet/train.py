@@ -138,9 +138,6 @@ def run():
         num_training_steps=num_train_steps
     )
     
-    #testing for 1 batch
-    train_batch = next(iter(train_data_loader))
-    test_batch = next(iter(test_data_loader))
     
     best_loss = np.inf
     for epoch in tqdm(range(config.EPOCHS),total=config.EPOCHS):
@@ -148,12 +145,11 @@ def run():
                                     net,
                                     optimizer,
                                     scheduler,
-                                    device,
-                                    train_batch)
+                                    device)
         test_loss = engine.eval_fn(test_data_loader,
                                    net,
-                                   device,
-                                   test_batch)
+                                   device)
+                                   
         print(f'Epoch: {epoch}, Train Loss:{train_loss}, Test Loss:{test_loss}')
         if test_loss < best_loss and config.SAVE_MODEL:
             torch.save(net.state_dict(), config.MODEL_PATH)
