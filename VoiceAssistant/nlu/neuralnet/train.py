@@ -169,7 +169,8 @@ def run():
     test_batch = next(iter(test_data_loader))
     writer = SummaryWriter(log_dir=config.LOG_PATH)
     best_loss = np.inf
-    for epoch in tqdm(range(config.EPOCHS),total=config.EPOCHS):
+    loop = tqdm(range(config.EPOCHS),total=config.EPOCHS,leave=False)
+    for epoch in loop:
         train_loss = engine.train_fn(train_data_loader,
                                     net,
                                     optimizer,
@@ -189,11 +190,21 @@ def run():
         if train_loss < best_loss and config.SAVE_MODEL:
             torch.save(net.state_dict(), config.MODEL_PATH)
             best_loss = train_loss
-    test_loss = engine.eval_fn(test_data_loader,
-                                net,
-                                device,
-                                test_batch)
+        loop.set_description(f'Epoch [{epoch}/{config.EPOCHS}]')
+        loop.set_postfix(train_loss = train_loss.item() , val_loss = val_loss.item())
+    
+    enc_list = [enc_entity, enc_intent, enc_scenario]
+    test_loss,pre_dict, rec_dict, fs_dict,fig_dict = engine.test_fn(test_data_loader,
+                                                                    net,
+                                                                    device,
+                                                                    enc_list,
+                                                                    test_batch)
     writer.add_scalar('Test Loss',test_loss)
+    writer.add_scalars('Precision', pre_dict)
+    writer.add_scalars('Recall', rec_dict)
+    writer.add_scalars('F-score', fs_dict)
+    for k,fig in fig_dict.items():
+        writer.add_figure(k,fig)
     writer.close()
 if __name__ == "__main__":
     run()

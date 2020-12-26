@@ -68,6 +68,18 @@
             - Do post padding for batching puropose
                 - ids
                 - label
+    - Get confusion matrix and other metrics for test set 
+         - I need to be able to store all y_hats for all the batches 
+         - precsion,recall,cm, for each head
+    - Labels
+        - [1 x 63], we have lables for all 63 Tx
+    - Y_hat
+        - [1 x 57], there is only one Tx 
+        - [1 x 63x 57] -> []       -> [1 x 63]
+        - why is the logits of intent of shape [1 x 57], shouldn't it be?
+            - [Sample x Classes ]
+            - Because 
+    - Why is the confusiont matx
 ### Notes
     - Increase the max_len by 2 to take into account the special token
     - Try weighted crossentropy loss becasue do to skewed distribution of classes 
@@ -88,5 +100,6 @@
             - https://github.com/google-research/bert/issues/504
     - Change engine so that it takes one optimizer, passing multiple optimizer is not scaleable and alot repeating code
     - Put starting lr to a hyperparameter
+
 
             

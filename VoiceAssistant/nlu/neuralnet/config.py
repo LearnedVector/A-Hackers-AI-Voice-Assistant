@@ -12,7 +12,7 @@ SAVE_MODEL = False
 MAX_LEN = 61+2
 TRAIN_BATCH_SIZE = 1
 TEST_BATCH_SIZE = 1
-EPOCHS = 10
+EPOCHS = 20
 
 #Model selection parameter
 BASE_MODEL = 'bert-base-uncased'
