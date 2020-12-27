@@ -95,7 +95,7 @@ def run():
             target_intent,
             target_scenario,
             random_state=50,
-            test_size=0.20
+            test_size=0.20,
         )
      
     (train_sentences,
@@ -140,6 +140,7 @@ def run():
     device = config.DEVICE 
     net = NLUModel(num_entity, num_intent, num_scenario)
     net.to(device)
+    # net.load_state_dict(torch.load(config.MODEL_PATH))
 
     param_optimizer = list(net.named_parameters())
 
@@ -191,14 +192,16 @@ def run():
         if train_loss < best_loss and config.SAVE_MODEL:
             torch.save(net.state_dict(), config.MODEL_PATH)
             best_loss = train_loss
+            print(f'New Model at Epoch {epoch} , Loss: {best_loss}')
         loop.set_description(f'Epoch [{epoch}/{config.EPOCHS}]')
-        loop.set_postfix(train_loss = train_loss.item() , val_loss = val_loss.item())
+        loop.set_postfix(train_loss = train_loss, val_loss = val_loss)
     
     enc_list = [enc_entity, enc_intent, enc_scenario]
     test_loss,pre_dict, rec_dict, fs_dict,fig_dict = engine.test_fn(test_data_loader,
                                                                     net,
                                                                     device,
                                                                     enc_list
+                                                                    
                                                                     )
     writer.add_scalar('Test Loss',test_loss)
     writer.add_scalars('Precision', pre_dict)

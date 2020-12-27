@@ -82,7 +82,7 @@ def get_confusion_matrix(y_hat,targets,enc):
 
     
 def get_precision_recall(y_hat,targets):
-    targets = targets.numpy()
+    targets = targets
     percision, recall , fs, _ = precision_recall_fscore_support(y_hat, targets, average='micro')
     return percision,recall,fs 
 
@@ -95,7 +95,7 @@ def classifcation_report(y_hat,targets,enc):
 def to_yhat(logits):
     logits = logits.view(-1, logits.shape[-1])
     probs = torch.softmax(logits, dim=1)
-    y_hat = torch.argmax(probs, dim=1).numpy()
+    y_hat = torch.argmax(probs, dim=1).cpu().numpy()
     return y_hat 
 
 def test_fn(data_loader,model,device,enc_list):
@@ -108,8 +108,7 @@ def test_fn(data_loader,model,device,enc_list):
     tasks_targets = [None, None, None]
     precision_dict,recall_dict,fs_dict,fig_dict = {},{},{},{}
     with torch.no_grad():
-        loop = tqdm(enumerate(data_loader), total=len(data_loader), leave=False)
-        for bi, batch in loop:
+        for bi, batch in enumerate(data_loader):
             for k,v in batch.items():
                 batch[k] = v.to(device)
             (entity_logits,
@@ -122,23 +121,22 @@ def test_fn(data_loader,model,device,enc_list):
             intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
             scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
             
-            loss = entity_loss + intent_loss + scenario_loss
+            loss = (entity_loss + intent_loss + scenario_loss)/3
             final_loss += loss
             
             targets_keys = ['target_entity', 'target_intent','target_scenario']
             logits_list = [entity_logits, intent_logits, scenario_logits]
             
             for i,(y_hats,target,target_key,logits) in enumerate(zip(tasks_y_hats,tasks_targets,targets_keys,logits_list)):
-                if y_hats != None:
-                    tasks_y_hats[i] = torch.vstack(y_hats,to_yhat(logits))
-                    tasks_targets[i] = torch.vstack(target,batch[target_key])
+                if not (y_hats is None):
+                    tasks_y_hats[i] = np.concatenate((y_hats,to_yhat(logits)))
+                    tasks_targets[i] = np.concatenate((target,batch[target_key].cpu()))
+                    
                     #also need to stack the targets
                 else:
-                    tasks_y_hats[i] = to_yhat(logits,)
-                    tasks_targets[i] = batch[target_key]
+                    tasks_y_hats[i] = to_yhat(logits)
+                    tasks_targets[i] = batch[target_key].cpu()
 
-            loop.set_description(f'Test Batch [{bi} / {len(data_loader)}]')
-            loop.set_postfix(batch_loss=loss.item(), mean_batch_loss = final_loss.item()/len(data_loader))
        
         #the code below should be done after all batches proccess
         for y_hats,target,enc,key in zip(tasks_y_hats,
@@ -158,8 +156,7 @@ def eval_fn(data_loader,model,device):
     model.eval()
     final_loss = 0
     with torch.no_grad():
-        loop = tqdm(enumerate(data_loader), total=len(data_loader), leave=False)
-        for bi,batch in loop:
+        for bi,batch in enumerate(data_loader):
             for k,v in batch.items():
                 batch[k] = v.to(device)
             (entity_logits,
@@ -172,9 +169,7 @@ def eval_fn(data_loader,model,device):
             intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
             scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
             
-            loss = entity_loss + intent_loss + scenario_loss
-            loop.set_description(f'Val Batch [{bi} / {len(data_loader)}]')
-            loop.set_postfix(batch_loss=loss.item(), mean_batch_loss = final_loss.item()/len(data_loader))
+            loss = (entity_loss + intent_loss + scenario_loss)/3
             final_loss += loss
     return final_loss/len(data_loader)
 def train_fn(data_loader,
@@ -186,8 +181,7 @@ def train_fn(data_loader,
 
     model.train()
     final_loss = 0
-    loop = tqdm(enumerate(data_loader), total=len(data_loader), leave=False)
-    for bi, batch in loop:
+    for bi, batch in enumerate(data_loader):
         for k,v in batch.items():
             batch[k] = v.to(device)
 
@@ -203,13 +197,11 @@ def train_fn(data_loader,
         intent_loss =  loss_func(intent_logits,batch['target_intent'],batch['mask'],model.num_intent)
         scenario_loss =  loss_func(scenario_logits,batch['target_scenario'],batch['mask'],model.num_scenario)
 
-        loss = entity_loss + intent_loss + scenario_loss
+        loss = (entity_loss + intent_loss + scenario_loss)/3
         loss.backward()
 
         optimizer.step()
         scheduler.step()
 
-        final_loss += loss
-        loop.set_description(f'Train Batch [{bi} / {len(data_loader)}]')
-        loop.set_postfix(batch_loss=loss.item() , mean_batch_loss = final_loss.item()/len(data_loader))
+        final_loss += loss.item()
     return final_loss/len(data_loader)

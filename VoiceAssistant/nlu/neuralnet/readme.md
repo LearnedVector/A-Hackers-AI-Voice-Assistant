@@ -102,4 +102,9 @@
     - Put starting lr to a hyperparameter
 
 
+- The validation loss and training loss dont decrease
+- Now Train-Val-Test pipe line is bug free
+
+
+
             
