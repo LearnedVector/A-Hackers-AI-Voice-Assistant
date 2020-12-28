@@ -189,7 +189,7 @@ def run():
 
         if val_loss < best_loss and config.SAVE_MODEL:
             torch.save(net.state_dict(), config.MODEL_PATH)
-            best_loss = train_loss
+            best_loss = val_loss
             print(f'New Model at Epoch {epoch} , Loss: {best_loss}')
         writer.add_scalars('Loss',
                            {'Train':train_loss, 'Validation':val_loss},
