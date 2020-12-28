@@ -215,6 +215,3 @@ def run_test(test_data_loader,device,net,enc_list,writer):
         writer.add_figure(k,fig)
 if __name__ == "__main__":
     run()
-
-
-
