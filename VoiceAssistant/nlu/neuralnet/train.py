@@ -95,7 +95,8 @@ def run():
             target_intent,
             target_scenario,
             random_state=50,
-            test_size=0.20,
+            test_size=0.10,
+            stratify=target_intent
         )
      
     (train_sentences,
@@ -112,7 +113,8 @@ def run():
             train_intent,
             train_scenario,
             random_state=50,
-            test_size=0.25
+            test_size=0.1,
+            stratify=train_intent
         )
     train_dataset = NLUDataset(train_sentences,
                                train_entity,
@@ -142,28 +144,14 @@ def run():
     net.to(device)
     # net.load_state_dict(torch.load(config.MODEL_PATH))
 
-    param_optimizer = list(net.named_parameters())
-
-    no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
-    optimizer_parameters = [
-        {
-            'params': [p for n,p in param_optimizer if not any(nd in n for nd in no_decay)],
-            'weight_deacy': 0.001
-        },
-        {
-            'params': [p for n,p in param_optimizer if  any(nd in n for nd in no_decay)],
-            'weight_deacy': 0.0
-        }
-        
-    ]
-    
-    num_train_steps = len(train_sentences) // (config.TRAIN_BATCH_SIZE * config.EPOCHS)
-    optimizer = AdamW(optimizer_parameters, lr=3e-5)
+    num_train_steps = config.TRAIN_BATCH_SIZE * config.EPOCHS
+    optimizer = AdamW(net.parameters(), lr=2e-5, correct_bias=False)
     scheduler =  get_linear_schedule_with_warmup(
         optimizer,
         num_warmup_steps=0,
-        num_training_steps=num_train_steps
+        num_training_steps= num_train_steps
     )
+    
     
     #testing for 1 batch
     # train_batch = next(iter(train_data_loader))
@@ -171,37 +159,53 @@ def run():
 
     writer = SummaryWriter(log_dir=config.LOG_PATH)
     best_loss = np.inf
-    loop = tqdm(range(config.EPOCHS),total=config.EPOCHS,leave=False)
-    for epoch in loop:
-        train_loss = engine.train_fn(train_data_loader,
+    print(f'Number of Training Sentences:{len(train_sentences)}')
+    print(f'Number of Validation Sentences:{len(val_sentences)}')
+    for epoch in range(config.EPOCHS):
+        print(f'Epoch {epoch + 1}/{config.EPOCHS}')
+        print('-' * 10)
+        (train_loss,
+        train_entity_acc,
+        train_intent_acc,
+        train_scenario_acc
+        ) = engine.train_fn(train_data_loader,
                                     net,
                                     optimizer,
                                     scheduler,
-                                    device
+                                    device,
+                                    len(train_sentences),
                                     )
+        print(f'Train Loss:{train_loss}, Train Entity Acc: {train_entity_acc}, Train Intent Acc: {train_intent_acc}, Train Scen Acc {train_scenario_acc}')
+        (val_loss,
+        val_entity_acc,
+        val_intent_acc,
+        val_scenario_acc) = engine.eval_fn(val_data_loader,
+                                        net,
+                                        device,
+                                      len(val_sentences), 
+                                        )
 
-        val_loss = engine.eval_fn(val_data_loader,
-                                  net,
-                                  device
-                                  )
-        print(f'Epoch: {epoch}, Train Loss:{train_loss}, Val Loss:{val_loss}')
-        writer.add_scalars('Loss',
-                           {'Train':train_loss, 'Validation':val_loss},
-                           epoch)
+        print(f'Valid Loss:{val_loss}, Valid Entity Acc: {val_entity_acc} ,Valid Intent Acc: {val_intent_acc}, Train Scen Acc {val_scenario_acc}')
 
-        if train_loss < best_loss and config.SAVE_MODEL:
+        if val_loss < best_loss and config.SAVE_MODEL:
             torch.save(net.state_dict(), config.MODEL_PATH)
             best_loss = train_loss
             print(f'New Model at Epoch {epoch} , Loss: {best_loss}')
-        loop.set_description(f'Epoch [{epoch}/{config.EPOCHS}]')
-        loop.set_postfix(train_loss = train_loss, val_loss = val_loss)
-    
-    enc_list = [enc_entity, enc_intent, enc_scenario]
+        writer.add_scalars('Loss',
+                           {'Train':train_loss, 'Validation':val_loss},
+                           epoch)
+        writer.add_scalars('Accuracy',
+                           {'Train Intent':train_intent_acc, 'Train Scenario':train_scenario_acc, 'Train Entity': train_entity_acc,
+                           'Valid Intent':val_intent_acc, 'Valid Scenario':val_scenario_acc, 'Valid Entity': val_entity_acc},
+                           epoch)
+    # enc_list = [enc_entity, enc_intent, enc_scenario]
+    # run_test(test_data_loader,device,net,enc_list,writer)
+    writer.close()
+def run_test(test_data_loader,device,net,enc_list,writer):
     test_loss,pre_dict, rec_dict, fs_dict,fig_dict = engine.test_fn(test_data_loader,
                                                                     net,
                                                                     device,
                                                                     enc_list
-                                                                    
                                                                     )
     writer.add_scalar('Test Loss',test_loss)
     writer.add_scalars('Precision', pre_dict)
@@ -209,7 +213,6 @@ def run():
     writer.add_scalars('F-score', fs_dict)
     for k,fig in fig_dict.items():
         writer.add_figure(k,fig)
-    writer.close()
 if __name__ == "__main__":
     run()
 

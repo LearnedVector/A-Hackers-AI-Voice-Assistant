@@ -20,14 +20,14 @@ class NLUModel(nn.Module):
         self.out_scenario = nn.Linear(768,self.num_scenario)
 
     def forward(self, ids,mask,token_type_ids):
-        hs,cls_hs = self.bert(ids,
+        out = self.bert(input_ids=ids,
                               attention_mask=mask,
-                              token_type_ids=token_type_ids,
-                              return_dict=False)
-
+                              token_type_ids=token_type_ids
+                              )
+        hs, cls_hs = out['last_hidden_state'], out['pooler_output']
         entity_hs = self.drop_1(hs)
-        intent_hs = self.drop_1(cls_hs)
-        scenario_hs = self.drop_1(cls_hs)
+        intent_hs = self.drop_2(cls_hs)
+        scenario_hs = self.drop_3(cls_hs)
 
         entity_hs = self.out_entity(entity_hs)
         intent_hs = self.out_intent(intent_hs)

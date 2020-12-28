@@ -102,9 +102,35 @@
     - Put starting lr to a hyperparameter
 
 
-- The validation loss and training loss dont decrease
-- Now Train-Val-Test pipe line is bug free
+- Trying training the model on only individual task, 
+    - Intent
+        - Model does really bad on bs=16
+        - What about bs=1?
+            - It works, it learn to predict the class of the single sentence
+        - Turns out the error was here 
+            - num_train_steps = len(train_sentences) // (config.TRAIN_BATCH_SIZE * config.EPOCHS) 
+            - scheduler =  get_linear_schedule_with_warmup(
+                                                    optimizer,
+                                                    num_warmup_steps=0,
+                                                    num_training_steps=num_train_steps
+                                                )
+    - Scenairo 
+    - Entity
 
+Try training on only Cls task
+    - Intent + Entity Joint
+        - Now works
 
+Try training on all 3 task
+    - Now works
 
-            
+Generate test,validation and test set such that their distrubtion is same
+    - That will mean we will need to validate data 3 times 
+        - one with intent_valid_set
+            - when we do this we will only care about intent_logits
+        - one with scenario_valid_set
+        - one with entity_valid_set
+    - Split Train-test 3 times using stratify as intent,scenario,entity
+    - Split Train-val 3 times using stratify as intent,scenario,entity
+
+Fix validation
