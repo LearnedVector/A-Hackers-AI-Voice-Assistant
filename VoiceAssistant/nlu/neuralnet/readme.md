@@ -140,7 +140,18 @@ Get Results for
         - produce the word_piece x label json (N x 1) [x]
         - Produce word_pieces x class_scores dict (N x C) [x]
     - Intent
-        - produce label (1,)
+        - produce label (1,) [x]
         - produce class_label x scores (N,C) [x]
     
     - Scenario
+        - To the same [x]
+
+Optimize the graph 
+    - Save the file [x]
+    - Test the traced model on app [x]
+
+Rename the engine file to something else 
+Rename app.py to engine.py
+
+
+

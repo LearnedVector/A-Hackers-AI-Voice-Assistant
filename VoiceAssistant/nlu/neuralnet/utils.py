@@ -1,3 +1,4 @@
+"""Contains helper functions for train.py used for train and evaluating model """
 import torch.nn as nn
 import torch
 import numpy as np
@@ -9,6 +10,8 @@ from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import confusion_matrix
 from model import NLUModel
 from tqdm import tqdm
+
+
 def loss_func(logits, targets, mask, num_labels, entity=False):
     criterion = nn.CrossEntropyLoss()
     if entity:

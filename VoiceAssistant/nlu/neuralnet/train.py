@@ -13,7 +13,7 @@ from sklearn import model_selection
 
 
 import config 
-import engine
+import utils
 from dataset import NLUDataset 
 from model import NLUModel
 
@@ -168,7 +168,7 @@ def run():
         train_entity_acc,
         train_intent_acc,
         train_scenario_acc
-        ) = engine.train_fn(train_data_loader,
+        ) = utils.train_fn(train_data_loader,
                                     net,
                                     optimizer,
                                     scheduler,
@@ -179,7 +179,7 @@ def run():
         (val_loss,
         val_entity_acc,
         val_intent_acc,
-        val_scenario_acc) = engine.eval_fn(val_data_loader,
+        val_scenario_acc) = utils.eval_fn(val_data_loader,
                                         net,
                                         device,
                                       len(val_sentences), 
@@ -202,7 +202,7 @@ def run():
     # run_test(test_data_loader,device,net,enc_list,writer)
     writer.close()
 def run_test(test_data_loader,device,net,enc_list,writer):
-    test_loss,pre_dict, rec_dict, fs_dict,fig_dict = engine.test_fn(test_data_loader,
+    test_loss,pre_dict, rec_dict, fs_dict,fig_dict = utils.test_fn(test_data_loader,
                                                                     net,
                                                                     device,
                                                                     enc_list
