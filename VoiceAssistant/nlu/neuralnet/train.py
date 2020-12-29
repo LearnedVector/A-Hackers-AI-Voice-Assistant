@@ -79,8 +79,8 @@ def run():
         'enc_intent': enc_intent,
         'enc_scenario': enc_scenario
     }
-    ##joblib.dump(meta_data, 'meta_data.bin')
-    
+    # joblib.dump(meta_data, 'meta_data.bin')
+ 
     (train_sentences,
      test_sentences,
      train_entity,

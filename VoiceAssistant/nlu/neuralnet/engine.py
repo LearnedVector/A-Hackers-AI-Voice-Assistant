@@ -95,7 +95,7 @@ def classifcation_report(y_hat,targets,enc):
 def to_yhat(logits):
     logits = logits.view(-1, logits.shape[-1])
     probs = torch.softmax(logits, dim=1)
-    y_hat = torch.argmax(probs, dim=1).cpu().numpy()
+    y_hat = torch.argmax(probs, dim=1).cpu().detach().numpy()
     return y_hat 
 
 def test_fn(data_loader,model,device,enc_list):

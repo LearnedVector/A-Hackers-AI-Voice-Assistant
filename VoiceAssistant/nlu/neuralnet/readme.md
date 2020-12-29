@@ -134,3 +134,13 @@ Generate test,validation and test set such that their distrubtion is same
     - Split Train-val 3 times using stratify as intent,scenario,entity
 
 Fix validation
+
+Get Results for 
+    - Entity
+        - produce the word_piece x label json (N x 1) [x]
+        - Produce word_pieces x class_scores dict (N x C) [x]
+    - Intent
+        - produce label (1,)
+        - produce class_label x scores (N,C) [x]
+    
+    - Scenario

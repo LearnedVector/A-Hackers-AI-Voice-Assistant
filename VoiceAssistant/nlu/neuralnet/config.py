@@ -1,9 +1,9 @@
 import transformers
 import torch
 RAW_DATASET_PATH = '../data/nlu.csv'
-ER_DATASET_PATH  = '/home2/ncwn67/A-Hackers-AI-Voice-Assistant/VoiceAssistant/nlu/data/er_dataset.csv'
-IS_DATASET_PATH  = '/home2/ncwn67/A-Hackers-AI-Voice-Assistant/VoiceAssistant/nlu/data/is_dataset.csv'
-MODEL_PATH = '/home2/ncwn67/models/epoch50_best_model.pth'
+ER_DATASET_PATH  = '../data/er_dataset.csv'
+IS_DATASET_PATH  = '../data/is_dataset.csv'
+MODEL_PATH = '/Volumes/My Passport 1/models/epoch50_best_model.pth' 
 LOG_PATH = '/home2/ncwn67/A-Hackers-AI-Voice-Assistant/VoiceAssistant/nlu/logs/run4'
 
 #Additional Parameters:
