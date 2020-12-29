@@ -5,7 +5,7 @@ ER_DATASET_PATH  = '../data/er_dataset.csv'
 IS_DATASET_PATH  = '../data/is_dataset.csv'
 MODEL_PATH = '/Volumes/My Passport 1/models/epoch50_best_model.pth' 
 TRACE_MODEL_PATH ='/Volumes/My Passport 1/models/epoch50_best_model_trace.pth' 
-LOG_PATH = '/home2/ncwn67/A-Hackers-AI-Voice-Assistant/VoiceAssistant/nlu/logs/run4'
+LOG_PATH = '/home2/ncwn67/A-Hackers-AI-Voice-Assistant/VoiceAssistant/nlu/tb_logs/run4'
 
 #Additional Parameters:
 SAVE_MODEL = True

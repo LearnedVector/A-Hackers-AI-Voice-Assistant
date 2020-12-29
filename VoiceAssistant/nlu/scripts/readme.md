@@ -1,3 +1,7 @@
+## NLU dataset example ##
+![Alt text](./images/dataset-example.png?raw=true "NLU dataset")
+
+
 ## Intent and Scenario Dataframe Stats
 **18 Scenarios total**
 |Scenario| Count|
@@ -157,3 +161,20 @@
 |  words |       172163 non-null |  object|
 |  entity|      172163 non-null|  object|
 
+
+
+### Dataset references ###
+
+
+@InProceedings{XLiu.etal:IWSDS2019,
+  author    = {Xingkun Liu, Arash Eshghi, Pawel Swietojanski and Verena Rieser},
+  title     = {Benchmarking Natural Language Understanding Services for building Conversational Agents},
+  booktitle = {Proceedings of the Tenth International Workshop on Spoken Dialogue Systems Technology (IWSDS)},
+  month     = {April},
+  year      = {2019},
+  address   = {Ortigia, Siracusa (SR), Italy},
+  publisher = {Springer},
+  pages     = {xxx--xxx},
+  url       = {http://www.xx.xx/xx/}
+}
+https://github.com/xliuhw/NLU-Evaluation-Data
