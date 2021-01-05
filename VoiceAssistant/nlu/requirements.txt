@@ -42,3 +42,4 @@ torchvision==0.8.2
 tqdm==4.54.1
 transformers==4.1.1
 typing-extensions==3.7.4.3
+flask==1.1.1
