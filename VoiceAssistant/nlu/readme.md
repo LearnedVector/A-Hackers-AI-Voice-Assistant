@@ -9,7 +9,7 @@
 
 ## How to do inference ##
     - Download the optimized model 
-         - https://drive.google.com/file/d1H8lDIH14TGsj_Jl11kvuFOuu9RvZ02FB/view?usp=sharing
+         - https://drive.google.com/file/d/1H8lDIH14TGsj_Jl11kvuFOuu9RvZ02FB/view?usp=sharing
     - Install the dependcies in the requirement.txt
     - python engine.py --model_file PATH_TO_MODEL
         - This will use flask to host a local server to serve the model at an the endponint **/test**
