@@ -3,7 +3,7 @@ import pandas as pd
 import re
 import sys
 sys.path.append('../')
-import neuralnet.config
+import neuralnet.config as config
 '''
 This is a script to  preprocess the Natural Language Understanding dataset introduced by Xingkun Liu in the paper
 Benchmarking Natural Language Understanding Services for building Conversational Agents.
@@ -18,7 +18,7 @@ Benchmarking Natural Language Understanding Services for building Conversational
   pages     = {xxx--xxx},
   url       = {http://www.xx.xx/xx/}
 }
-https://github.com/xliuhw/NLU-Evaluation-Data
+https://github.com/xliuhw/NLU-Evaluation-Data/blob/master/AnnotatedData/NLU-Data-Home-Domain-Annotated-All.csv
 An error was found  in a line of  the original csv dataset file and was corrected to the following:
 980;25817;weather;query;IRR_XL;is the [place_name : city] hot or cold in terms of [weather_descriptor : temperature] [query_detail : if it is a coastal area] then is the [weather_descriptor : humidity] high or low;null;date, location, time;is the city hot or cold in terms of temperature if it is a coastal areathen is the humidity high or low;Is the city  hot or cold in terms of temperature .If it is a coastal area,then is the humidity high or low.;How would you ask your PDA about the weather in another city?
 To utilize this script please rectify the error.
@@ -106,6 +106,7 @@ def preprocess_raw_df(df):
 
 def make_dataset():
     df = pd.read_csv(config.RAW_DATASET_PATH,sep=';', encoding='latin-1')    
+    print('loaded')
     df = preprocess_raw_df(df)
     er_dataset = entity_recognition_dataset(df)
     is_dataset = intent_scenario_classfication_dataset(df)
