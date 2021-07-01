@@ -131,7 +131,7 @@ The pretrained model can be found here at this [google drive](https://drive.goog
        python train.py --train_file /path/to/train/json --valid_file /path/to/valid/json --load_model_from /path/to/pretrain/speechrecognition.ckpt
     ```
    2. To train from scratch omit the `--load_model_from` argument in train.py
-   3. after model training us `optimize_graph.py` to create a frozen optimized pytorch model. The pretrained optimized torch model can be found in the google drive link as `speechrecognition.zip`
+   3. after model training use `optimize_graph.py` to create a frozen optimized pytorch model. The pretrained optimized torch model can be found in the google drive link as `speechrecognition.zip`
 
 
 3. test
