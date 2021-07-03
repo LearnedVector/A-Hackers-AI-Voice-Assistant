@@ -64,9 +64,20 @@ For more details make sure to visit these files to look at script arguments and 
 
 1. collect data
     1. environment and wakeword data can be collected using `python collect_wakeword_audio.py`
-    2. be sure to collect other speech data like common voice. split the data into n seconds chunk with `split_audio_into_chunks.py`.
-    3. put data into two seperate directory named `0` and `1`. `0` for non wakeword, `1` for wakeword. use `create_wakeword_jsons.py` to create train and test json
-    4. create a train and test json in this format...
+       ```
+       cd VoiceAssistant/wakeword/scripts
+       mkdir data
+       cd data
+       mkdir 0 1 wakewords
+       python collect_wakeword_audio.py --sample_rate 8000 --seconds 2 --interactive --interactive_save_path ./data/wakewords
+       ```
+    2. to avoid the imbalanced dataset problem, we can duplicate the wakeword clips with 
+       ```
+       python replicate_audios.py --wakewords_dir data/wakewords/ --copy_destination data/1/ --copy_number 100
+       ```
+    3. be sure to collect other speech data like common voice. split the data into n seconds chunk with `split_audio_into_chunks.py`.
+    4. put data into two seperate directory named `0` and `1`. `0` for non wakeword, `1` for wakeword. use `create_wakeword_jsons.py` to create train and test json
+    5. create a train and test json in this format...
         ```
         // make each sample is on a seperate line
         {"key": "/path/to/audio/sample.wav, "label": 0}
