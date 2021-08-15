@@ -9,7 +9,7 @@
     like that we can just use the prediction functions of the class instead of building everything
     in this file
 
-3: Change line number () and () to appropriate inference functions from the Super classes discussed
+3: Change line number (72) and (78) to appropriate inference functions from the Super classes discussed
    above
 
 -Extras(for me):
