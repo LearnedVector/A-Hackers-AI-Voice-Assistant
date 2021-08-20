@@ -167,3 +167,5 @@ class Wrapper(TaskManager, Client):
 						elif '--unsure' == self.intent:
 							tts.say(self.infered_list[0])
 
+				else:
+					tts.say('I was unable to understand')
