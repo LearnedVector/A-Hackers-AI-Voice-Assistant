@@ -24,7 +24,7 @@ regex==2020.11.13
 resampy==0.2.2
 sacremoses==0.0.43
 scikit-learn==0.22.2.post1
-scipy==1.4.1
+scipy==1.6.3
 seaborn==0.11.1
 sentencepiece==0.1.94
 sonopy==0.1.2
