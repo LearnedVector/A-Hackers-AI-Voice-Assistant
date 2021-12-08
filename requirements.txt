@@ -42,3 +42,17 @@ torchvision==0.8.2
 tqdm==4.54.1
 transformers==4.1.1
 typing-extensions==3.7.4.3
+beautifulsoup4==4.8.0
+bs4==0.0.1
+bson==0.5.10
+Flask==1.1.2
+lxml==4.3.2
+mistune==0.8.4
+mps-youtube==0.1.37
+numpy==1.19.5
+pafy==0.5.5
+pytube==10.9.2
+urllib3==1.26.2
+wikipedia==1.4.0
+word2number==1.1
+youtube-search-python==1.4.6
