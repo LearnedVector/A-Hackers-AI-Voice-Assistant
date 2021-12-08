@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("tokens.db", check_same_thread=False)
+conn = sqlite3.connect("nlu/tokens.db", check_same_thread=False)
 c = conn.cursor()
 
 
