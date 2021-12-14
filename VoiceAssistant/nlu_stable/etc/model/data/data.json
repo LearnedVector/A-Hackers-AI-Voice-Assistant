@@ -1,0 +1,109 @@
+{"intents": [
+        {"tag": "greeting",
+         "patterns": ["hi", "hey there", "hi", "hello", "whats up", "wake up"],
+         "responses": ["Hello!", "Good to see you again!", "Hi there, how can I help?"],
+         "context_set": ""
+        },
+        {"tag": "goodbye",
+         "patterns": ["see you again", "see you later", "bye", "i am leaving", "have a good day", "talk to you later"],
+         "responses": ["see you again", "Talk to you later", "Goodbye!"],
+         "context_set": ""
+        }
+        ,
+        {"tag": "hru",
+         "patterns": ["how are you", "whats up", "howdy", "are you good", "hey whats up"],
+         "responses": ["I am good, what about you?", "I am doing great!", "I am just sitting idle here", "Nothing much"],
+         "context_set": ""
+        },
+        {"tag": "wrud",
+         "patterns": ["what are you doing"],
+         "responses": ["I am chatting with you", "I am just idle, do you want any help?"],
+         "context_set": ""
+        },      
+        {"tag": "name",
+         "patterns": ["your name", "what should i call you"],
+         "responses": ["You can call me Walle.", "My name is Walle", "I am Walle"],
+         "context_set": ""
+        },
+        {"tag": "thank",
+         "patterns": ["thanks", "thank you"],
+         "responses": ["Always at your service", "My pleasure", "No problem", "It's my duty", "Welcome!",
+           "Glad to hear that I did something great, haha", "Anytime!", "Not a problem!"],
+         "context_set": ""
+        },
+        {"tag": "comment",
+         "patterns": ["you are"],
+         "responses": ["Yes I am", "I know"],
+         "context_set": ""
+        },
+        {"tag": "happiness",
+         "patterns": ["i am happy", "glad", "haha", "lol", "lmao", "hehe", "so happy"],
+         "responses": ["Glad to hear", "That's great!", "You are smiling"],
+         "context_set": ""
+        },
+        {"tag": "random",
+         "patterns": ["thats great", "so cool", "thats amazing", "thats great", "awesome", "super", "epic"],
+         "responses": ["thats great", "so cool", "thats amazing", "thats great", "awesome", "super", "epic"],
+         "context_set": ""
+        },
+        {"tag": "memorize",
+         "patterns": ["do you know", "did you know"],
+         "responses": [""],
+         "context_set": "--memorize"
+        },
+        {"tag": "news",
+         "patterns": ["whats the news", "tell me the news", "the latest news", "news"],
+         "responses": ["Do you want to listen to some recent news?"],
+         "context_set": "--news"
+        },
+        {"tag": "jotnote",
+         "patterns": ["note this", "jot this down", "write a note", "write down this", "jot down", "note it down"],
+         "responses": [""],
+         "context_set": "--note"
+        },
+        {"tag": "info",
+         "patterns": ["what is", "who is", "how is", "what was", "where is", "where was", "who was", "who will be",
+          "what", "who", "where", "whom", "who", "when"],
+         "responses": [""],
+         "context_set": "--info"
+        },
+        {"tag": "youtube",
+         "patterns": ["play", " play music", "music", "youtube"],
+         "responses": [],
+         "context_set": "--youtube"
+        },
+        {"tag": "weather",
+         "patterns": ["whats the weather", "weather", "will it rain today", "the temperature", "humid", "humidity"],
+         "responses": [""],
+         "context_set": "--weather"
+        },
+        {"tag": "joke",
+         "patterns": ["tell me a joke", "crack a joke"],
+         "responses": [""],
+         "context_set": "--joke"
+        },
+        {"tag": "cud",
+         "patterns": ["can you do", "your abilities", "your work", "can you provide"],
+         "responses": ["I can tell the weather, read the news, search about topics on google or wikipedia, and even play music from youtube"],
+         "context_set": ""
+        },
+        {"tag": "chat1",
+         "patterns": ["your hobbies", "like to do in your free time"],
+         "responses": ["I mostly like helping humans, and I am trying my best", "I like to surf the web"],
+         "context_set": ""
+        }
+        ,
+        {"tag": "chat2",
+         "patterns": ["do you love humans", "do you love me"],
+         "responses": ["Yes I do!", "yes I love humans", "Of course I like you"],
+         "context_set": ""
+        },
+
+        {"tag": "blank",
+         "patterns": [""],
+         "responses": ["I am not sure"],
+         "context_set": "--unsure"
+        }
+
+   ]
+}
