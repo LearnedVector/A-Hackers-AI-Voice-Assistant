@@ -13,7 +13,7 @@ llvmlite==0.35.0
 matplotlib==3.3.3
 nltk==3.5
 numba==0.52.0
-numpy==1.18.5
+numpy==1.22.0
 oauthlib==3.1.0
 pandas==1.1.5
 Pillow==8.0.1
