@@ -7,7 +7,7 @@ filelock==3.0.12
 fsspec==0.8.5
 future==0.18.2
 gast==0.3.3
-joblib==1.0.0
+joblib==1.2.0
 Keras-Preprocessing==1.1.2
 llvmlite==0.35.0
 matplotlib==3.3.3
